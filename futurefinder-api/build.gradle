@@ -1,0 +1,37 @@
+plugins {
+    id 'org.springframework.boot'          // ✅ 여기에서만 부트 적용
+    id 'io.spring.dependency-management'
+    id 'java'
+}
+
+
+dependencies {
+    runtimeOnly project(":futurefinder-storage") // 컴파일 시에는 필요 없고, 실행 시에만 포함되는 의존성
+    implementation project(":futurefinder-domain")
+    implementation project(":futurefinder-common")
+    implementation project(":futurefinder-external")
+    testImplementation project(":futurefinder-storage")
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    // 설정 클래스에 대한 메타정보를 컴파일 시 생성해주는 어노테이션 프로세서
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // JWT를 자바에서 쉽게 사용할 수 있도록 도와주는 jjwt 라이브러리
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+// test 설정으로 JUnit 5 사용
+
+
+bootJar {
+    enabled = true
+}
+// Spring Boot 애플리케이션을 실행 가능한 JAR 파일로 빌드
+
+jar {
+    enabled = false
+}
+// 일반적인 JAR 빌드 태스크를 비활성화

@@ -1,0 +1,6 @@
+rootProject.name = 'futurefinder'
+include 'futurefinder-api'
+include 'futurefinder-common'
+include 'futurefinder-domain'
+include 'futurefinder-external'
+include 'futurefinder-storage'

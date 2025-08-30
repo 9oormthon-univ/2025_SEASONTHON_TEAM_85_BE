@@ -1,0 +1,6 @@
+dependencies {
+    implementation project(':futurefinder-common')
+    // 여긴 만약을 대비
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+}
