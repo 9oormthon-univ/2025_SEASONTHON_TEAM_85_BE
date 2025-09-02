@@ -1,7 +1,9 @@
 package backend.futurefinder.facade.auth;
 
 
-import backend.futurefinder.model.auth.OAuthProvider;
+import backend.futurefinder.external.ExternalFileClient;
+import backend.futurefinder.external.ExternalOAuthClient;
+import backend.futurefinder.model.auth.OAuthProfile;
 import backend.futurefinder.model.notification.PushInfo;
 import backend.futurefinder.model.user.AccessStatus;
 import backend.futurefinder.model.user.UserId;
@@ -11,14 +13,13 @@ import backend.futurefinder.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-
 @Service
 @RequiredArgsConstructor
 public class AccountFacade {
 
     private final AuthService authService;
     private final UserService userService;
+    private final ExternalOAuthClient externalOAuthClient;
 
     public UserId createUser(
             String accountId,
@@ -60,5 +61,20 @@ public class AccountFacade {
     }
 
 
+    // 외부 통신으로 프로필 획득 후 accountKey/nickname 구성
+    public UserId loginWithKakao(String kakaoAccessToken, String appToken, PushInfo.Device device) {
+        OAuthProfile profile = externalOAuthClient.verifyKakao(kakaoAccessToken);
+
+        // 이메일 동의가 없으면 oauthId로 대체 키 생성
+        String accountKey = (profile.email() != null && !profile.email().isBlank())
+                ? profile.email().trim()
+                : "kakao:" + profile.oauthId();
+
+        String displayName = (profile.nickname() != null && !profile.nickname().isBlank())
+                ? profile.nickname().trim()
+                : "kakao_" + profile.oauthId();
+
+        return userService.loginWithOAuthAccount(accountKey, displayName, appToken, device);
+    }
 
 }

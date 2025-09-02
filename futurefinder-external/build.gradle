@@ -2,7 +2,7 @@ dependencies {
     implementation project(':futurefinder-common')
     implementation project(':futurefinder-domain')
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 }
 

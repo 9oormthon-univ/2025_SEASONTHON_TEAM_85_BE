@@ -38,6 +38,7 @@ public class UserService {
             PushInfo.Device device
     ){
         userValidator.isNotAlreadyCreated(accountId);
+        userValidator.nickNameExists(nickName);
         UserInfo user = userAppender.append(accountId, userName, nickName);
         userRemover.removePushToken(device);
         userAppender.appendUserPushToken(user, appToken, device);
@@ -92,6 +93,25 @@ public class UserService {
         return userInfo.getAccountId();
     }
 
+    // 소셜(OAuth) 공통 로그인/가입 로직
+    public UserId loginWithOAuthAccount(String accountKey, String displayName, String appToken, PushInfo.Device device) {
+        final String key  = accountKey == null ? "" : accountKey.trim();
+        final String name = displayName == null ? "" : displayName.trim();
 
+        // 1) 기존 가입자 조회 (ACCESS 우선 → 없으면 NEED_CREATE_PASSWORD)
+        UserInfo user = userReader.readByKakaoId(key, AccessStatus.ACCESS);
 
+        // 2) 신규 가입
+        if (user == null) {
+            // 기존 정책 유지: nickName = accountKey (유니크 보장)
+            userValidator.nickNameExists(key);
+            user = userAppender.appendKakao(key, name /* userName */, key /* nickName */);
+        }
+
+        // 3) 푸시 토큰 갱신
+        userRemover.removePushToken(device);
+        userAppender.appendUserPushToken(user, appToken, device);
+
+        return user.getUserId();
+    }
 }

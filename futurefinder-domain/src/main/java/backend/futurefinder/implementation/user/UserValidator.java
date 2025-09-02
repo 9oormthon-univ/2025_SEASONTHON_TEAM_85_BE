@@ -20,9 +20,9 @@ public class UserValidator {
     }
 
 
-    public void nameExists(String name) {
-        if (userRepository.searchUser(name).isPresent()) {
-            throw new ConflictException(ErrorCode.USER_NAME_OVERLAP);
+    public void nickNameExists(String nickName) {
+        if (userRepository.searchUser(nickName).isPresent()) {
+            throw new ConflictException(ErrorCode.USER_NICKNAME_EXISTS);
         }
     }
 

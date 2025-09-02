@@ -30,8 +30,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<UserId> searchUser(String userName) {
-        return userJpaRepository.findByUserName(userName).map(e -> UserId.of(e.getUserId()));
+    public Optional<UserId> searchUser(String nickName) {
+        return userJpaRepository.findByNickNameAndStatus(nickName, AccessStatus.ACCESS).map(e -> UserId.of(e.getUserId()));
     }
 
     @Override
@@ -120,6 +120,33 @@ public class UserRepositoryImpl implements UserRepository {
                         nickName, status
                 ).map(UserJpaEntity::toUser) // ✅ 인스턴스 기준 메서드 참조
                 .orElse(null);
+    }
+
+    @Override
+    public boolean existsByNickName(String nickName) {
+        return userJpaRepository.existsByNickName(nickName);
+    }
+
+
+    @Override
+    public UserInfo appendKakao(String accountId, String userName, String nickName){
+        return userJpaRepository
+                .findByAccountIdAndStatus(accountId, AccessStatus.ACCESS)
+                .map(entity -> {
+                    userJpaRepository.save(entity);
+                    return entity.toUser();
+                })
+                .orElseGet(() -> {
+                    // UserJpaEntity.generate(...)가 Id가 기반이라면,
+                    // accountId 기반의 팩토리 메서드를 새로 만들어줘야 함
+                    UserJpaEntity userEntity = UserJpaEntity.generate(
+                            userName,
+                            nickName,
+                            accountId,
+                            AccessStatus.ACCESS
+                    );
+                    return userJpaRepository.save(userEntity).toUser();
+                });
     }
 
 

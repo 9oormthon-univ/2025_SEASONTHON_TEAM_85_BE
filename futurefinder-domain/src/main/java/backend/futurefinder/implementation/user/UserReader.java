@@ -32,5 +32,8 @@ public class UserReader {
     }
 
 
+    public UserInfo readByKakaoId(String accountId, AccessStatus accessStatus){
+        return userRepository.readByAccountId(accountId, accessStatus);
+    }
 
 }

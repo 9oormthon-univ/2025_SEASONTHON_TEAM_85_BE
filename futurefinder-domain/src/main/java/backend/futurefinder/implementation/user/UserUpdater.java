@@ -1,5 +1,6 @@
 package backend.futurefinder.implementation.user;
 
+import backend.futurefinder.error.ConflictException;
 import backend.futurefinder.error.ErrorCode;
 import backend.futurefinder.error.NotFoundException;
 import backend.futurefinder.model.media.Media;
@@ -26,9 +27,16 @@ public class UserUpdater {
 
 
     public void updateNickName(UserId userId, String nickName) {
-        UserId updatedUserId = userRepository.updateNickName(userId, nickName)
+        // 닉네임 중복 체크
+        if (userRepository.existsByNickName(nickName)) {
+            throw new ConflictException(ErrorCode.USER_NICKNAME_EXISTS);
+        }
+
+        // 닉네임 변경 시도
+        userRepository.updateNickName(userId, nickName)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
     }
+
 
     public void updatePassword(UserId userId, String password) {
         userRepository.updatePassword(userId, password)

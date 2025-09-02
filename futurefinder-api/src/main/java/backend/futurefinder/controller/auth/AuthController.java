@@ -2,10 +2,12 @@ package backend.futurefinder.controller.auth;
 
 import backend.futurefinder.dto.request.auth.LoginRequest;
 import backend.futurefinder.dto.request.auth.LogoutRequest;
+import backend.futurefinder.dto.request.auth.OAuthLoginRequest;
 import backend.futurefinder.dto.request.auth.SignUpRequest;
 import backend.futurefinder.dto.response.auth.TokenResponse;
 import backend.futurefinder.facade.auth.AccountFacade;
 import backend.futurefinder.model.auth.JwtToken;
+import backend.futurefinder.model.notification.PushInfo;
 import backend.futurefinder.model.user.UserId;
 import backend.futurefinder.response.HttpResponse;
 import backend.futurefinder.response.SuccessCreateResponse;
@@ -89,6 +91,28 @@ public class AuthController {
         return ResponseHelper.successOnly();
     }
 
+
+    // 카카오 로그인
+    @PostMapping("/kakao")
+    public ResponseEntity<HttpResponse<TokenResponse>> kakaoLogin(
+            @RequestHeader("Authorization") String authorization, // Bearer {kakaoAccessToken}
+            @RequestHeader("X-Device-Id") String deviceId,
+            @RequestHeader("X-Device-Provider") String provider,
+            @RequestHeader("X-App-Token") String appToken
+    ) {
+        String token = authorization.replaceFirst("(?i)^Bearer\\s+", "").trim();
+
+        PushInfo.Device device = PushInfo.Device.of(
+                deviceId,
+                PushInfo.Provider.valueOf(provider.toUpperCase())
+        );
+
+        UserId userId = accountFacade.loginWithKakao(token, appToken, device);
+
+        JwtToken jwtToken = jwtTokenUtil.createJwtToken(userId);
+        authService.createLoginInfo(userId, jwtToken.getRefreshToken());
+        return ResponseHelper.success(TokenResponse.of(jwtToken));
+    }
 
 
 }

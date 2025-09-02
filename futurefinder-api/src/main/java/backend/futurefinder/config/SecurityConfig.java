@@ -35,6 +35,7 @@ public class SecurityConfig {
                                 "/api/auth/logout",
                                 "/api/user/account-id",
                                 "/api/user/password",
+                                "/api/auth/kakao",
                                 "/docs/**",
                                 "/health"
                         ).permitAll()

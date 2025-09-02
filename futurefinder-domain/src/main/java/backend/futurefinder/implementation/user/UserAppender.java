@@ -31,5 +31,11 @@ public class UserAppender {
 
     }
 
+    public UserInfo appendKakao(String accountId, String userName, String nickName) {
+        return userRepository.appendKakao(accountId, userName, nickName);
+    }
+
+
+
 
 }

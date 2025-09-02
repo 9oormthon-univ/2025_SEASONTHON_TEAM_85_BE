@@ -42,7 +42,7 @@ public enum ErrorCode {
     USER_ALREADY_CREATED("USER_3", "이미 가입된 사용자입니다."),
     USER_NOT_CREATED("USER_4", "가입되지 않은 사용자입니다."),
     USER_PUSH_TOKEN_NOT_FOUND("USER_5", "푸시 토큰을 찾을 수 없음."),
-    USER_NAME_OVERLAP("USER_6", "유저 닉네임이 중복됨");
+    USER_NICKNAME_EXISTS("USER_6", "이미 존재하는 유저 닉네임입니다.");
 
 
 
