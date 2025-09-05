@@ -1,6 +1,7 @@
 package backend.futurefinder.jpaentity.user;
 
-import com.amazonaws.services.ec2.model.LocationType;
+
+import backend.futurefinder.model.user.LocationType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

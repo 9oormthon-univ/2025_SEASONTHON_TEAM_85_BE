@@ -49,11 +49,11 @@ public class UserService {
         userAppender.appendPassword(userId, password);
     }
 
+
     public UserInfo getUserByAccountId(String accountId, AccessStatus accessStatus) {
         UserInfo userInfo = userReader.readByAccountId(accountId, accessStatus);
         return userInfo;
     }
-
 
     public void createDeviceInfo(UserInfo userInfo, PushInfo.Device device, String appToken) {
         userAppender.appendUserPushToken(userInfo, appToken, device);

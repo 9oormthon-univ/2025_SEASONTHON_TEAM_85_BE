@@ -34,10 +34,17 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/api/auth/logout",
                                 "/api/user/account-id",
-                                "/api/user/password",
+                                "/api/auth/find/password",
                                 "/api/auth/kakao",
                                 "/docs/**",
-                                "/health"
+                                "/health",
+
+                                // 🔓 Swagger / OpenAPI
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

@@ -37,6 +37,10 @@ public class AccountFacade {
         userService.createPassword(userId, hashedPassword);
     }
 
+    public UserInfo getUserByAccountId(String accountId, AccessStatus accessStatus) {
+        return userService.getUserByAccountId(accountId, accessStatus);
+    }
+
     public UserId login(
             String accountId,
             String password,

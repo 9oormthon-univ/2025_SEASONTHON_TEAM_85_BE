@@ -57,12 +57,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         return path.startsWith("/api/auth/create/account") ||
                 path.startsWith("/api/user/account-id") ||
-                path.startsWith("/api/user/password") ||
+                path.startsWith("/api/auth/find/password") ||
                 path.startsWith("/api/auth/login") ||
                 path.startsWith("/api/auth/logout") ||
                 path.startsWith("/api/auth/kakao") ||
                 path.startsWith("/docs") ||
-                path.startsWith("/health");
+                path.startsWith("/health") ||
+
+                //
+                path.equals("/swagger-ui.html") ||
+                path.startsWith("/swagger-ui") ||
+                path.startsWith("/v3/api-docs");
+
+
     }
 
     private String resolveToken(HttpServletRequest request) {

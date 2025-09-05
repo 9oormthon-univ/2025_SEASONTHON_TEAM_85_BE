@@ -13,8 +13,12 @@ import java.util.UUID;
 @Table(
         name = "economic_word",
         schema = "futurefinder",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_user_word", columnNames = {"user_id", "word_name"})
+        },
         indexes = {
-                @Index(name = "eco_word_idx_name", columnList = "word_name", unique = true)
+                @Index(name = "idx_user_word", columnList = "user_id, word_name"),
+                @Index(name = "idx_user_created_word", columnList = "user_id, created_at, word_id")
         }
 )
 @Getter
@@ -28,22 +32,26 @@ public class EconomicWordJpaEntity extends BaseEntity {
     @Column(name = "word_name", length = 128, nullable = false)
     private String wordName;
 
-    @Column(name = "meaning", length = 128, nullable = false)
+    @Column(name = "meaning", nullable = false)
     private String meaning;
 
+    @Column(name = "user_id", length = 128, nullable = false)
+    private String userId;
 
 
     @Builder
-    public EconomicWordJpaEntity(String wordName, String meaning) {
+    public EconomicWordJpaEntity(String wordName, String meaning, String userId) {
         this.wordId = UUID.randomUUID().toString();
         this.wordName = wordName;
         this.meaning  = meaning;
+        this.userId = userId;
     }
 
-    public static EconomicWordJpaEntity create(String wordName, String meaning) {
+    public static EconomicWordJpaEntity create(String wordName, String meaning, String userId) {
         return EconomicWordJpaEntity.builder()
                 .wordName(wordName)
                 .meaning(meaning)
+                .userId(userId)
                 .build();
     }
 
@@ -54,4 +62,6 @@ public class EconomicWordJpaEntity extends BaseEntity {
     public void rename(String newWordName) {
         this.wordName = newWordName;
     }
+
+
 }
