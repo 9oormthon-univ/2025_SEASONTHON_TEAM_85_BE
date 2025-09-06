@@ -4,6 +4,7 @@ package backend.futurefinder.implementation.user;
 import backend.futurefinder.error.ErrorCode;
 import backend.futurefinder.error.NotFoundException;
 import backend.futurefinder.model.user.AccessStatus;
+import backend.futurefinder.model.user.UserId;
 import backend.futurefinder.model.user.UserInfo;
 import backend.futurefinder.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,12 @@ import org.springframework.stereotype.Component;
 public class UserReader {
 
     private final UserRepository userRepository;
+
+
+    public UserInfo read(UserId userId){
+        return userRepository.read(userId);
+    }
+
 
     public UserInfo readByAccountId(String accountId, AccessStatus accessStatus){
         UserInfo userInfo = userRepository.readByAccountId(accountId, accessStatus);

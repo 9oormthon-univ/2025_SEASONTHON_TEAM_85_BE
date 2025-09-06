@@ -15,6 +15,9 @@ public final class UserInfo {
     private final String password;
     private final Media image;
     private final AccessStatus status;
+    private final String email;
+    private final String phoneNumber;
+    private final String birth;
 
 
     private UserInfo(
@@ -23,7 +26,11 @@ public final class UserInfo {
             String nickName,
             String accountId,
             String password, Media image,
-            AccessStatus status
+            AccessStatus status,
+            String email,
+            String phoneNumber,
+            String birth
+
     ) {
         this.userId = userId;
         this.userName = userName;
@@ -32,6 +39,9 @@ public final class UserInfo {
         this.password = password;
         this.image = image;
         this.status = status;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.birth = birth;
     }
 
     public static UserInfo of(
@@ -41,7 +51,10 @@ public final class UserInfo {
             String accountId,
             String password,
             Media image,
-            AccessStatus status
+            AccessStatus status,
+            String email,
+            String phoneNumber,
+            String birth
     ) {
         return new UserInfo(
                 userId,
@@ -50,7 +63,11 @@ public final class UserInfo {
                 accountId,
                 password,
                 image,
-                status
+                status,
+                email,
+                phoneNumber,
+                birth
+
         );
     }
 }

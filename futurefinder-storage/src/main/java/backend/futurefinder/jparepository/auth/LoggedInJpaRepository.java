@@ -9,4 +9,6 @@ import java.util.Optional;
 
 public interface LoggedInJpaRepository extends JpaRepository<LoggedInJpaEntity, String> {
     void deleteByRefreshToken(String refreshToken);
+    Optional<LoggedInJpaEntity> findByRefreshToken(String refreshToken);
+    Optional<LoggedInJpaEntity> findByRefreshTokenAndUserId(String refreshToken, String userId);
 }

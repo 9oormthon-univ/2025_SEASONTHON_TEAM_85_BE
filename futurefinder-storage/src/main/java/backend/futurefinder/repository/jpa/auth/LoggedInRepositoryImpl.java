@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class LoggedInRepositoryImpl implements LoggedInRepository {
@@ -31,6 +33,20 @@ public class LoggedInRepositoryImpl implements LoggedInRepository {
     }
 
 
+    @Override
+    public void update(RefreshToken refreshToken, RefreshToken preRefreshToken) {
+        loggedInJpaRepository.findByRefreshToken(preRefreshToken.getToken())
+                .ifPresent(entity -> {
+                    entity.updateRefreshToken(refreshToken);
+                    loggedInJpaRepository.save(entity);
+                });
+    }
 
+    @Override
+    public Optional<RefreshToken> read(String refreshToken, UserId userId) {
+        return loggedInJpaRepository
+                .findByRefreshTokenAndUserId(refreshToken, userId.getId())
+                .map(LoggedInJpaEntity::toRefreshToken);
+    }
 
 }

@@ -41,6 +41,16 @@ public class UserJpaEntity extends BaseEntity {
     @Column(name = "nick_name")
     private String nickName;
 
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "birth")
+    private String birth;
+
+
     @Column(name = "account_id")
     private String accountId;
 
@@ -56,6 +66,9 @@ public class UserJpaEntity extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private AccessStatus status;
+
+
+
 
     @Builder
     public UserJpaEntity(
@@ -97,7 +110,10 @@ public class UserJpaEntity extends BaseEntity {
                 this.accountId,
                 this.password,
                 Media.of(FileCategory.PROFILE, this.pictureUrl, 0, this.pictureType),
-                this.status
+                this.status,
+                this.email,
+                this.phoneNumber,
+                this.birth
         );
     }
 
@@ -111,6 +127,13 @@ public class UserJpaEntity extends BaseEntity {
     public void updateUserPictureUrl(Media media) {
         this.pictureUrl = media.getUrl();
         this.pictureType = media.getType();
+    }
+
+    public void updateUserProfile(String userName, String email, String phoneNumber, String birth) {
+        this.userName = userName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.birth = birth;
     }
 
 

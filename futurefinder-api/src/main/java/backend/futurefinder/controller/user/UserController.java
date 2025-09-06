@@ -4,6 +4,7 @@ package backend.futurefinder.controller.user;
 import backend.futurefinder.dto.request.user.UserRequest;
 import backend.futurefinder.dto.response.auth.AccountIdResponse;
 import backend.futurefinder.dto.response.auth.TokenResponse;
+import backend.futurefinder.dto.response.user.UserResponse;
 import backend.futurefinder.model.media.FileCategory;
 import backend.futurefinder.model.media.FileData;
 import backend.futurefinder.model.user.AccessStatus;
@@ -296,6 +297,140 @@ public class UserController {
     ) {
         String accountId = userService.findAccountIdByNickName(nickName, AccessStatus.ACCESS);
         return ResponseHelper.success(AccountIdResponse.of(accountId));
+    }
+
+
+
+
+    @Operation(
+            summary = "프로필 조회",
+            description = "로그인된 사용자의 프로필 정보를 조회한다.",
+            security = { @SecurityRequirement(name = "bearerAuth") }, // 🔒 Access 토큰 필요
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "성공",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = UserResponse.class),
+                                    examples = @ExampleObject(name = "success", value = """
+                                {
+                                  "status": 200,
+                                  "data": {
+                                    "username": "홍길동",
+                                    "nickname": "길동이",
+                                    "email": "gildong@example.com",
+                                    "phoneNumber": "010-1234-5678",
+                                    "birth": "1995-05-25",
+                                    "imageUrl": "https://cdn.example.com/profile/abc.jpg"
+                                  }
+                                }
+                                """)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "인증 실패",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(name = "unauthorized", value = """
+                                {
+                                  "status": 401,
+                                  "data": {
+                                    "errorCode": "AUTH_4",
+                                    "message": "토큰을 확인해주세요"
+                                  }
+                                }
+                                """)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "잘못된 요청",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(name = "bad-request", value = """
+                                {
+                                  "status": 400,
+                                  "data": {
+                                    "errorCode": "COMMON_2",
+                                    "message": "요청 변수가 잘못되었습니다."
+                                  }
+                                }
+                                """)
+                            )
+                    )
+                    // 필요 시 404(회원정보 없음)도 추가 가능
+            }
+    )
+    @GetMapping("/profile")
+    public ResponseEntity<HttpResponse<UserResponse>> getUserProfile(
+            @CurrentUser UserId userId
+    ){
+        UserInfo userInfo = userService.getUserProfile(userId);
+        return ResponseHelper.success(UserResponse.of(userInfo));
+
+    }
+
+
+    @Operation(
+            summary = "프로필 수정",
+            description = "사용자의 이름/이메일/전화번호/생일을 수정한다.",
+            security = { @SecurityRequirement(name = "bearerAuth") }, // 🔒 Access 토큰 필요
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "성공",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = SuccessOnlyResponse.class),
+                                    examples = @ExampleObject(name = "success", value = """
+                                {
+                                  "status": 200,
+                                  "data": { "message": "성공" }
+                                }
+                                """)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "인증 실패",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(name = "unauthorized", value = """
+                                {
+                                  "status": 401,
+                                  "data": { "errorCode": "AUTH_4", "message": "토큰을 확인해주세요" }
+                                }
+                                """)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "잘못된 요청",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(name = "bad-request", value = """
+                                {
+                                  "status": 400,
+                                  "data": { "errorCode": "COMMON_2", "message": "요청 변수가 잘못되었습니다." }
+                                }
+                                """)
+                            )
+                    )
+            }
+    )
+    @PutMapping("/profile")
+    public ResponseEntity<HttpResponse<SuccessOnlyResponse>> UpdateUserProfile(
+            @CurrentUser UserId userId,
+            @RequestParam String userName,
+            @RequestParam String email,
+            @RequestParam String phoneNumber,
+            @RequestParam String birth
+    ){
+        userService.changeUserProfile(userId, userName, email, phoneNumber, birth);
+        return ResponseHelper.successOnly();
+
     }
 
 

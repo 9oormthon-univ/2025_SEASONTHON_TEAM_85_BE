@@ -1,9 +1,6 @@
 package backend.futurefinder.service.auth;
 
-import backend.futurefinder.implementation.auth.AuthAppender;
-import backend.futurefinder.implementation.auth.AuthGenerator;
-import backend.futurefinder.implementation.auth.AuthRemover;
-import backend.futurefinder.implementation.auth.AuthValidator;
+import backend.futurefinder.implementation.auth.*;
 import backend.futurefinder.model.token.RefreshToken;
 import backend.futurefinder.model.user.UserId;
 import backend.futurefinder.model.user.UserInfo;
@@ -17,6 +14,8 @@ public class AuthService {
     private final AuthAppender authAppender;
     private final AuthGenerator authGenerator;
     private final AuthValidator authValidator;
+    private final AuthReader authReader;
+    private final AuthUpdater authUpdater;
     private final AuthRemover authRemover;
 
     public void createLoginInfo(UserId userId, RefreshToken refreshToken) {
@@ -38,5 +37,10 @@ public class AuthService {
         authRemover.removeLoginInfo(refreshToken);
     }
 
+
+    public void updateLoginInfo(String oldRefreshToken, RefreshToken newRefreshToken, UserId userId) {
+        RefreshToken ownedRefreshToken = authReader.readLoginInfo(oldRefreshToken, userId);
+        authUpdater.updateLoginInfo(newRefreshToken, ownedRefreshToken);
+    }
 
 }

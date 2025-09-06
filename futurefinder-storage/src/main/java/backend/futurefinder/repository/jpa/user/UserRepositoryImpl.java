@@ -10,6 +10,7 @@ import backend.futurefinder.repository.user.UserRepository;
 
 import backend.futurefinder.jparepository.user.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -19,6 +20,17 @@ import java.util.Optional;
 public class UserRepositoryImpl implements UserRepository {
 
     private final UserJpaRepository userJpaRepository;
+
+
+    @Override
+    public UserInfo read(UserId userId) {
+        return userJpaRepository.findById(
+                                userId.getId()
+                            ).map(UserJpaEntity::toUser).orElse(null);
+
+
+    }
+
 
 
     @Override
@@ -83,6 +95,20 @@ public class UserRepositoryImpl implements UserRepository {
                     return previousMedia;
                 });
     }
+
+    @Override
+    public void UpdateProfile(UserId userId, String userName, String email, String phoneNumber, String birth) {
+         userJpaRepository.findById(userId.getId())
+                .map(user -> {
+
+                    user.updateUserProfile(userName, email, phoneNumber, birth);
+
+                    userJpaRepository.save(user);
+
+                    return null;
+                });
+    }
+
 
     @Override
     public Optional<UserInfo> remove(UserId userId) {

@@ -2,8 +2,11 @@ package backend.futurefinder.dto.request.user;
 
 
 import backend.futurefinder.model.notification.NotificationStatus;
+import backend.futurefinder.model.user.UserInfo;
 
 public final class UserRequest {
+
+
 
     public static record UpdateNickName(String nickName) {
         public String toNickName() { return nickName; }
@@ -23,6 +26,8 @@ public final class UserRequest {
     public static record getAccountId(String accountId) {
         public String toAccountId() { return accountId; }
     }
+
+
 
 
 }

@@ -19,12 +19,14 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
-    //swagger
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
-    implementation 'io.springfox:springfox-swagger2:2.9.2'
-    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+
+    // ✅ Springdoc (Boot 3.x) — 버전 명시
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.12'
 
+    // ❌ 전부 제거(충돌 원인)
+    // implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
+    // implementation 'io.springfox:springfox-swagger2:2.9.2'
+    // implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 
 }
 
@@ -33,6 +35,15 @@ test {
 }
 // test 설정으로 JUnit 5 사용
 
+
+// (옵션) swagger-core 버전 강제 정렬
+configurations.all {
+    resolutionStrategy {
+        force 'io.swagger.core.v3:swagger-core-jakarta:2.2.36',
+                'io.swagger.core.v3:swagger-annotations-jakarta:2.2.36',
+                'io.swagger.core.v3:swagger-models-jakarta:2.2.36'
+    }
+}
 
 bootJar {
     enabled = true

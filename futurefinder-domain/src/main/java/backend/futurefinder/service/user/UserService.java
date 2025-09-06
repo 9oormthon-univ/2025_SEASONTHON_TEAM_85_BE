@@ -55,6 +55,15 @@ public class UserService {
         return userInfo;
     }
 
+    public UserInfo getUserProfile(UserId userId){
+        return userReader.read(userId);
+    }
+
+    public void changeUserProfile(UserId userId, String userName, String email, String phoneNumber, String birth){
+        userUpdater.UpdateProfile(userId, userName, email, phoneNumber, birth);
+    }
+
+
     public void createDeviceInfo(UserInfo userInfo, PushInfo.Device device, String appToken) {
         userAppender.appendUserPushToken(userInfo, appToken, device);
     }

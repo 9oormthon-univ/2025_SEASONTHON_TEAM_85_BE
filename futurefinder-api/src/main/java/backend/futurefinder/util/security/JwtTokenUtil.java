@@ -107,4 +107,5 @@ public class JwtTokenUtil {
         UserId userId = getUserIdFromToken(cleaned);
         return Pair.of(createJwtToken(userId), userId);
     }
+
 }

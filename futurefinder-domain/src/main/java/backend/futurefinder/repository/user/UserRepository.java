@@ -9,11 +9,13 @@ import java.util.Optional;
 
 public interface UserRepository {
 
+    UserInfo read(UserId userId);
     UserInfo readByAccountId(String accountId, AccessStatus status);
     Optional<UserId> searchUser(String nickName);
     UserInfo append(String accountId, String userName, String nickName);
     void appendPassword(UserId userId, String password);
     Optional<Media> updateMedia(UserId userId, Media media);
+    void UpdateProfile(UserId userId, String userName, String email, String phoneNumber, String birth);
     Optional<UserInfo> remove(UserId userId);
     boolean existsByNickName(String nickName);
     Optional<UserId> updateNickName(UserId userId, String nickName);
