@@ -11,9 +11,10 @@ public record StockMoverResponse(
         BigDecimal price,
         BigDecimal change,     // 전일대비 금액 (등락폭, vs)
         BigDecimal changePct
+
 ) {
     public static StockMoverResponse of(StockItem item) {
-        return new StockMoverResponse(item.name(), item.price(), item.change(), item.changePct());
+        return new StockMoverResponse(item.name(), item.price(), item.change(), item.changePct(), item.logoUrl());
     }
 
 

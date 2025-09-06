@@ -42,8 +42,8 @@ public class StockController {
                                   "status": 200,
                                   "data": {
                                     "stocks": [
-                                      { "name": "NAVER",   "price": 200000.00, "change": -5000.00, "changePct": -2.44 }
-                                      { "name": "삼성전자", "price": 72100.00, "change": 1100.00, "changePct": 1.55 },
+                                      { "name": "NAVER",   "price": 200000.00, "change": -5000.00, "changePct": -2.44, "logoUrl": "http"}
+                                      { "name": "삼성전자", "price": 72100.00, "change": 1100.00, "changePct": 1.55, "logoUrl": "http" },
                                     ]
                                   }
                                 }
