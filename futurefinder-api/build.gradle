@@ -6,7 +6,8 @@ plugins {
 
 
 dependencies {
-    runtimeOnly project(":futurefinder-storage") // 컴파일 시에는 필요 없고, 실행 시에만 포함되는 의존성
+    //runtimeOnly project(":futurefinder-storage") // 컴파일 시에는 필요 없고, 실행 시에만 포함되는 의존성
+    implementation project(":futurefinder-storage")  // runtimeOnly → implementation 변경
     implementation project(":futurefinder-domain")
     implementation project(":futurefinder-common")
     implementation project(":futurefinder-external")
@@ -20,9 +21,9 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
     //swagger
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
-    implementation 'io.springfox:springfox-swagger2:2.9.2'
-    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+    //implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
+    //implementation 'io.springfox:springfox-swagger2:2.9.2'
+    //implementation 'io.springfox:springfox-swagger-ui:2.9.2'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.12'
 
 

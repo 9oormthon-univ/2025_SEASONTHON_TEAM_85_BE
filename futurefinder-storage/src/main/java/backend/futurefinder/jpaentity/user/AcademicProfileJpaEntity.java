@@ -74,6 +74,15 @@ public class AcademicProfileJpaEntity extends BaseEntity {
         if (maxGpa != null) this.maxGpa = maxGpa;
     }
 
+    public void updateInfo(String schoolName, String major, String minor, BigDecimal currentGpa, BigDecimal maxGpa, GraduationStatus status) {
+        this.schoolName = schoolName;
+        this.majorName = major;
+        this.minorName = minor;
+        this.currentGpa = currentGpa;
+        this.maxGpa = maxGpa;
+        this.graduationStatus = status;
+    }
+
     public void changeStatus(GraduationStatus status) {
         this.graduationStatus = status;
     }
