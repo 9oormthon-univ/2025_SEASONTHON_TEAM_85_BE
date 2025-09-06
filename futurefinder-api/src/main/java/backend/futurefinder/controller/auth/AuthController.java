@@ -31,6 +31,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -638,6 +639,82 @@ public class AuthController {
         return ResponseHelper.success(TokenResponse.of(jwtToken));
     }
 
+    @Operation(
+            summary = "JWT 리프레시",
+            description = "리프레시 토큰을 이용해 새 JWT(access/refresh)를 발급한다.",
+            security = { @SecurityRequirement(name = "bearerAuth") }, //
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "성공",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    // 래퍼(HttpResponse<TokenResponse>)를 예시로 표현
+                                    examples = @ExampleObject(name = "success", value = """
+                                {
+                                  "status": 200,
+                                  "data": {
+                                    "accessToken": "newAccessToken",
+                                    "refreshToken": "newRefreshToken"
+                                  }
+                                }
+                                """)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "리프레시 토큰 검증 실패/만료",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(name = "unauthorized", value = """
+                                {
+                                  "status": 401,
+                                  "data": {
+                                    "errorCode": "AUTH_4",
+                                    "message": "토큰을 확인해주세요"
+                                  }
+                                }
+                                """)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "잘못된 요청",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(name = "bad-request", value = """
+                                {
+                                  "status": 400,
+                                  "data": {
+                                    "errorCode": "COMMON_2",
+                                    "message": "요청 변수가 잘못되었습니다."
+                                  }
+                                }
+                                """)
+                            )
+                    )
+            }
+    )
+    @GetMapping("/refresh")
+    public ResponseEntity<HttpResponse<TokenResponse>> refreshJwtToken(
+            @Parameter(
+                    name = "Authorization",
+                    in = ParameterIn.HEADER,
+                    description = "리프레시 토큰. 형식: `Bearer {refreshToken}`",
+                    required = true,
+                    schema = @Schema(type = "string"),
+                    example = "Bearer eyJhbGciOi..."
+            )
+            @RequestHeader("Authorization") String refreshToken
+    ) {
+        Pair<JwtToken, UserId> pair = jwtTokenUtil.refresh(refreshToken);
+        JwtToken newToken = pair.getLeft();
+        UserId userId = pair.getRight();
+
+        String oldToken = jwtTokenUtil.cleanedToken(refreshToken);
+        authService.updateLoginInfo(oldToken, newToken.getRefreshToken(), userId);
+        return ResponseHelper.success(TokenResponse.of(newToken));
+    }
 
 
 

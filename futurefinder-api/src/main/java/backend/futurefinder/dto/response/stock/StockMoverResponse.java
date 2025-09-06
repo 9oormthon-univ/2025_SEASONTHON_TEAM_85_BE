@@ -14,7 +14,7 @@ public record StockMoverResponse(
 
 ) {
     public static StockMoverResponse of(StockItem item) {
-        return new StockMoverResponse(item.name(), item.price(), item.change(), item.changePct(), item.logoUrl());
+        return new StockMoverResponse(item.name(), item.price(), item.change(), item.changePct());
     }
 
 
