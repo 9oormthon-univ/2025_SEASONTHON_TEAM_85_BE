@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 public class UserAwardJpaEntity extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)      // BIGINT AUTO_INCREMENT 가정
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "award_id", nullable = false)
     private Long id;
 
@@ -31,7 +31,6 @@ public class UserAwardJpaEntity extends BaseEntity {
 
     @Column(name = "organization", length = 100, nullable = false)
     private String organization;
-
 
     @Column(name = "activity_id")
     private Long activityId;
@@ -43,19 +42,21 @@ public class UserAwardJpaEntity extends BaseEntity {
     private String description;
 
     @Column(name = "awarded_on")
-    private LocalDate awardedOn;                 // DATE → LocalDate
+    private LocalDate awardedOn;
 
     @Column(name = "ended_on", length = 128)
     private LocalDate endedOn;
 
     @Builder
-    public UserAwardJpaEntity(String awardName,
+    public UserAwardJpaEntity(Long id,  // id 필드 추가
+                              String awardName,
                               String organization,
                               Long activityId,
                               String userId,
                               String description,
                               LocalDate awardedOn,
                               LocalDate endedOn) {
+        this.id = id;  // id 할당 추가
         this.awardName = awardName;
         this.organization = organization;
         this.activityId = activityId;

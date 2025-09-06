@@ -1,9 +1,9 @@
 package backend.futurefinder.jpaentity.subscription;
+
 import backend.futurefinder.jpaentity.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
-
 
 @Entity
 @Table(
@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 public class SubscriptionAccountJpaEntity extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // BIGINT PK → AUTO_INCREMENT 사용 시
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "subscription_account_id", nullable = false)
     private Long id;
 
@@ -33,7 +33,6 @@ public class SubscriptionAccountJpaEntity extends BaseEntity {
 
     @Column(name = "total_amount", precision = 15, scale = 0, nullable = false)
     private BigDecimal totalAmount;
-
 
     @Builder
     public SubscriptionAccountJpaEntity(String bankName,
@@ -52,6 +51,14 @@ public class SubscriptionAccountJpaEntity extends BaseEntity {
     }
 
     public void changeBank(String newBankName) {
-        this.bankName = newBankName;
+        if (newBankName != null && !newBankName.trim().isEmpty()) {
+            this.bankName = newBankName;
+        }
+    }
+
+    public void changeAccountNumber(String newAccountNumber) {
+        if (newAccountNumber != null && !newAccountNumber.trim().isEmpty()) {
+            this.accountNumber = newAccountNumber;
+        }
     }
 }
