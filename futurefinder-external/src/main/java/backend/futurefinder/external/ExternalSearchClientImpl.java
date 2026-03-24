@@ -1,6 +1,7 @@
 package backend.futurefinder.external;
 
 import backend.futurefinder.dto.word.EcosWordEnvelope;
+import backend.futurefinder.external.support.ExternalClientUtils;
 import backend.futurefinder.property.BokEcosProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,7 @@ public class ExternalSearchClientImpl implements ExternalSearchClient {
                                 .defaultIfEmpty("")
                                 .flatMap(b -> Mono.error(new IllegalStateException(
                                         "ECOS API error: HTTP %s, body=%s"
-                                                .formatted(res.statusCode(), truncate(b, 500))))))
+                                                .formatted(res.statusCode(), ExternalClientUtils.truncate(b, 500))))))
                 .bodyToMono(EcosWordEnvelope.class)
                 .block(Duration.ofSeconds(props.getTimeoutSeconds()));
 
@@ -45,7 +46,7 @@ public class ExternalSearchClientImpl implements ExternalSearchClient {
 
         // ✅ "유하지만 정확한" 매칭: 괄호/공백/말미기호 무시 후 완전일치
         return body.statisticWord().row().stream()
-                .filter(r -> equalsWord(r.word(), normalizedInput))
+                .filter(r -> canonicalize(r.word()).equalsIgnoreCase(canonicalize(normalizedInput)))
                 .findFirst()
                 .map(r -> {
                     String content = r.content() == null ? "" : r.content().strip();
@@ -59,14 +60,6 @@ public class ExternalSearchClientImpl implements ExternalSearchClient {
         if (s == null) return "";
         String t = s.strip();
         return java.text.Normalizer.normalize(t, java.text.Normalizer.Form.NFC);
-    }
-
-    /** 괄호/공백/말미 구두점 제거 후 비교 */
-    private static boolean equalsWord(String a, String b) {
-        String ca = canonicalize(a);
-        String cb = canonicalize(b);
-        // 한글은 대소문자 개념이 거의 없지만, 영문 혼용 대비해 ignoreCase
-        return ca.equalsIgnoreCase(cb);
     }
 
     /** 괄호부(끝쪽) 반복 제거 + 내부 공백 정규화 + 말미 기호 제거 */
@@ -88,7 +81,4 @@ public class ExternalSearchClientImpl implements ExternalSearchClient {
         return x;
     }
 
-    private static String truncate(String s, int max) {
-        return (s != null && s.length() > max) ? (s.substring(0, max) + "...") : s;
-    }
 }

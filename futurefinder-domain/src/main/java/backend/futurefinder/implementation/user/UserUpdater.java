@@ -43,8 +43,8 @@ public class UserUpdater {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
     }
 
-    public void UpdateProfile(UserId userId, String userName, String email, String phoneNumber, String birth){
-        userRepository.UpdateProfile(userId, userName, email, phoneNumber, birth);
+    public void updateProfile(UserId userId, String userName, String email, String phoneNumber, String birth){
+        userRepository.updateProfile(userId, userName, email, phoneNumber, birth);
     }
 
 }

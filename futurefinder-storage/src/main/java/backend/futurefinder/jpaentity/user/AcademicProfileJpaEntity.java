@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(
         name = "academic_profile",
+        schema = "futurefinder",
         indexes = {
                 @Index(name = "ap_idx_user", columnList = "user_id"),
                 @Index(name = "ap_idx_user_grad", columnList = "user_id, graduation_status")
@@ -45,7 +46,6 @@ public class AcademicProfileJpaEntity extends BaseEntity {
 
     @Column(name = "user_id", length = 128, nullable = false)
     private String userId;
-
 
     @Enumerated(EnumType.STRING)
     @Column(name = "graduation_status", length = 16) // ENUM('ENROLLED','GRADUATED','ON_LEAVE')

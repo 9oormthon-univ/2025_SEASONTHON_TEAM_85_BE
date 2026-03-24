@@ -15,7 +15,7 @@ public class AuthAppender {
 
 
     public void appendLoggedIn(RefreshToken newRefreshToken, UserId userId) {
-        loggedInRepository.append(newRefreshToken, userId);
+        loggedInRepository.save(newRefreshToken, userId);
     }
 
 

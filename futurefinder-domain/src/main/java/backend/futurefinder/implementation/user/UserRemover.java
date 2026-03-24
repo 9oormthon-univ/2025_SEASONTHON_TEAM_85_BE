@@ -21,11 +21,11 @@ public class UserRemover {
 
 
     public void removePushToken(PushInfo.Device device) {
-        pushNotificationRepository.remove(device);
+        pushNotificationRepository.delete(device);
     }
 
-    public UserInfo remove(UserId userId) {
-        return userRepository.remove(userId)
+    public UserInfo delete(UserId userId) {
+        return userRepository.delete(userId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
     }
 

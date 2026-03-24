@@ -25,7 +25,7 @@ public class AssetRepositoryImpl implements AssetRepository {
 
     @Override
     @Transactional
-    public void append(UserId userId, AssetType assetType, BigDecimal amountKrw, String note,
+    public void save(UserId userId, AssetType assetType, BigDecimal amountKrw, String note,
                        String bankName, String accountNumber) {
         final String uid = userId.getId();
         final BigDecimal amount = amountKrw != null ? amountKrw : BigDecimal.ZERO;
@@ -53,7 +53,7 @@ public class AssetRepositoryImpl implements AssetRepository {
     }
 
     @Override
-    public List<Asset> reads(UserId userId) {
+    public List<Asset> findAll(UserId userId) {
         // 1) 1차 정렬: assetType ASC
         Sort primary = Sort.by(Sort.Direction.ASC, "assetType");
         // 2) 2차 정렬: createdAt (기존 SortType 사용) — 최신순이면 LATEST, 오래된 순이면 OLDEST 선택

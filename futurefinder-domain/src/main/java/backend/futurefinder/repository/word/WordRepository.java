@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface WordRepository {
 
-    boolean append(UserId userId, String word, String meaning);
-    List<ScrapWord> reads(UserId userId, int page);
-    List<PopularWord> readPopularNames();
+    boolean save(UserId userId, String word, String meaning);
+    List<ScrapWord> findAll(UserId userId, int page);
+    List<PopularWord> findPopularNames();
 }

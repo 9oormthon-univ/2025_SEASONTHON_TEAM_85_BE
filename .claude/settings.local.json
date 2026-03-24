@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(wc -l /c/Users/yhkim/Desktop/futurefinder/futurefinder/futurefinder-api/src/main/java/backend/futurefinder/controller/*/*.java)",
+      "Bash(./gradlew compileJava)",
+      "Bash(./gradlew clean:*)"
+    ]
+  }
+}

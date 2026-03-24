@@ -15,24 +15,21 @@ public class UserAppender {
     private final UserRepository userRepository;
     private final PushNotificationRepository pushNotificationRepository;
 
-    public UserInfo append(String accountId, String userName, String nickName) {
-        return userRepository.append(accountId, userName, nickName);
+    public UserInfo save(String accountId, String userName, String nickName) {
+        return userRepository.save(accountId, userName, nickName);
     }
 
     public void appendUserPushToken(UserInfo userInfo, String appToken, PushInfo.Device device) {
-        pushNotificationRepository.append(device, appToken, userInfo);
+        pushNotificationRepository.save(device, appToken, userInfo);
     }
 
 
-    public void appendPassword(UserId userId, String password) {
-        System.out.println("userId = " + userId);                // 로그1
-        System.out.println("userId.getId() = " + userId.getId()); // 로그2
-        userRepository.appendPassword(userId, password);
-
+    public void savePassword(UserId userId, String password) {
+        userRepository.savePassword(userId, password);
     }
 
-    public UserInfo appendKakao(String accountId, String userName, String nickName) {
-        return userRepository.appendKakao(accountId, userName, nickName);
+    public UserInfo saveKakao(String accountId, String userName, String nickName) {
+        return userRepository.saveKakao(accountId, userName, nickName);
     }
 
 

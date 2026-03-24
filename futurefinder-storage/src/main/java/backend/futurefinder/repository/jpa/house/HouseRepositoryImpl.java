@@ -31,7 +31,7 @@ public class HouseRepositoryImpl implements HouseRepository {
 
     // ------- 지역 -------
     @Override
-    public void upsertLocation(String userId, String province, String city, LocationType type) {
+    public void saveLocation(String userId, String province, String city, LocationType type) {
         if (type == LocationType.CURRENT) {
             // 현재 주거지는 하나만 (기존 삭제 후 새로 등록)
             userLocationRepository.deleteByUserIdAndLocationType(userId, type);
@@ -58,7 +58,7 @@ public class HouseRepositoryImpl implements HouseRepository {
     }
 
     @Override
-    public List<LocationEntry> getLocations(String userId, LocationType type) {
+    public List<LocationEntry> findLocations(String userId, LocationType type) {
         return userLocationRepository.findByUserIdAndLocationType(userId, type)
                 .stream()
                 .map(e -> new LocationEntry(e.getProvince(), e.getCity()))
@@ -67,7 +67,7 @@ public class HouseRepositoryImpl implements HouseRepository {
 
     // ------- 청약 계좌 -------
     @Override
-    public void upsertSubscriptionAccount(String userId, String bankName, String accountNumber) {
+    public void saveSubscriptionAccount(String userId, String bankName, String accountNumber) {
         subscriptionAccountRepository.findByUserId(userId)
                 .ifPresentOrElse(
                         acc -> {
@@ -112,7 +112,7 @@ public class HouseRepositoryImpl implements HouseRepository {
     }
 
     @Override
-    public BigDecimal getSubscriptionTotal(String userId) {
+    public BigDecimal findSubscriptionTotal(String userId) {
         BigDecimal total = subscriptionAccountRepository.findByUserId(userId)
                 .map(SubscriptionAccountJpaEntity::getTotalAmount)
                 .orElse(BigDecimal.ZERO);
@@ -123,7 +123,7 @@ public class HouseRepositoryImpl implements HouseRepository {
 
     // ------- 입금 -------
     @Override
-    public void addDeposit(String userId, String accountNumber, BigDecimal amount, String memo) {
+    public void saveDeposit(String userId, String accountNumber, BigDecimal amount, String memo) {
         log.info("입금 등록 시작: userId={}, accountNumber={}, amount={}", userId, accountNumber, amount);
 
         // 계좌 존재 여부 확인
@@ -154,7 +154,7 @@ public class HouseRepositoryImpl implements HouseRepository {
     }
 
     @Override
-    public List<DepositEntry> getRecentDeposits(String userId, int limit) {
+    public List<DepositEntry> findRecentDeposits(String userId, int limit) {
         return subscriptionDepositRepository
                 .findByUserIdOrderByCreatedAtDesc(userId, PageRequest.of(0, limit))
                 .stream()

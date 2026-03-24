@@ -28,7 +28,7 @@ public class ChatbotServiceImpl implements ChatbotService {
             );
 
             String response = openAIService.getChatCompletion(messages);
-            chatRepository.saveMessage(userId, message, response);
+            chatRepository.save(userId, message, response);
 
             return response;
 
@@ -40,6 +40,6 @@ public class ChatbotServiceImpl implements ChatbotService {
 
     @Override
     public List<ChatMessageEntry> getChatHistory(String userId, int limit) {
-        return chatRepository.getRecentMessages(userId, limit);
+        return chatRepository.findRecentMessages(userId, limit);
     }
 }

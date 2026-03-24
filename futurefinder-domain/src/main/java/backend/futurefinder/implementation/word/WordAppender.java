@@ -16,7 +16,7 @@ public class WordAppender {
 
 
     public void append(UserId userId, String word, String meaning) {
-        boolean isExist = wordRepository.append(userId, word, meaning);
+        boolean isExist = wordRepository.save(userId, word, meaning);
         if(!isExist){
             throw new ConflictException(ErrorCode.WORD_ALREADY_EXISTS);
         }

@@ -18,7 +18,8 @@ import java.util.UUID;
         name = "asset",
         schema = "futurefinder",
         indexes = {
-                @Index(name = "asset_idx_type", columnList = "asset_type")
+                @Index(name = "asset_idx_type", columnList = "asset_type"),
+                @Index(name = "asset_idx_user", columnList = "user_id")
         }
 )
 @Getter

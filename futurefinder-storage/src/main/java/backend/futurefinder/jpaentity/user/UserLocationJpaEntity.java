@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(
         name = "user_location",
+        schema = "futurefinder",
         indexes = {
                 @Index(name = "ul_idx_user", columnList = "user_id"),
                 @Index(name = "ul_idx_user_type", columnList = "user_id, location_type")

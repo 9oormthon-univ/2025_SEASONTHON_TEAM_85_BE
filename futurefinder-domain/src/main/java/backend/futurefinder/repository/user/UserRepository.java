@@ -9,17 +9,17 @@ import java.util.Optional;
 
 public interface UserRepository {
 
-    UserInfo read(UserId userId);
-    UserInfo readByAccountId(String accountId, AccessStatus status);
-    Optional<UserId> searchUser(String nickName);
-    UserInfo append(String accountId, String userName, String nickName);
-    void appendPassword(UserId userId, String password);
+    UserInfo find(UserId userId);
+    UserInfo findByAccountId(String accountId, AccessStatus status);
+    Optional<UserId> findUserIdByNickName(String nickName);
+    UserInfo save(String accountId, String userName, String nickName);
+    void savePassword(UserId userId, String password);
     Optional<Media> updateMedia(UserId userId, Media media);
-    void UpdateProfile(UserId userId, String userName, String email, String phoneNumber, String birth);
-    Optional<UserInfo> remove(UserId userId);
+    void updateProfile(UserId userId, String userName, String email, String phoneNumber, String birth);
+    Optional<UserInfo> delete(UserId userId);
     boolean existsByNickName(String nickName);
     Optional<UserId> updateNickName(UserId userId, String nickName);
     Optional<UserId> updatePassword(UserId userId, String password);
-    UserInfo readByNickName(String nickName, AccessStatus status);
-    UserInfo appendKakao(String accountId, String userName, String nickName);
+    UserInfo findByNickName(String nickName, AccessStatus status);
+    UserInfo saveKakao(String accountId, String userName, String nickName);
 }

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -52,8 +53,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
+        // ✅ CORS preflight 는 무조건 패스
+        if (CorsUtils.isPreFlightRequest(request)) {
+            return true;
+        }
+
         String path = request.getRequestURI();
         return path.startsWith("/api/auth/create/account") ||
                 path.startsWith("/api/user/account-id") ||

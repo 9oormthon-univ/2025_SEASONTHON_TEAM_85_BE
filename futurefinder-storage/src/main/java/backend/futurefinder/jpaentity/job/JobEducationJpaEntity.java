@@ -4,7 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "job_education")
+@Table(
+        name = "job_education",
+        schema = "futurefinder",
+        indexes = {
+                @Index(name = "je_idx_user", columnList = "user_id")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,7 +22,7 @@ public class JobEducationJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "user_id", nullable = false)
     private String userId;
 
     @Column(nullable = false)

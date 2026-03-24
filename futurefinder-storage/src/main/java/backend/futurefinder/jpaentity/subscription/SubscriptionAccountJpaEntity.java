@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(
         name = "subscription_account",
+        schema = "futurefinder",
         indexes = {
                 @Index(name = "subacct_idx_user", columnList = "user_id"),
                 @Index(name = "subacct_idx_account_no", columnList = "account_number", unique = true)

@@ -19,7 +19,7 @@ public class ChatRepositoryImpl implements ChatRepository {
     private final ChatMessageRepository chatMessageRepository;
 
     @Override
-    public ChatMessageEntry saveMessage(String userId, String userMessage, String botResponse) {
+    public ChatMessageEntry save(String userId, String userMessage, String botResponse) {
         ChatMessageJpaEntity saved = chatMessageRepository.save(
                 ChatMessageJpaEntity.builder()
                         .userId(userId)
@@ -38,7 +38,7 @@ public class ChatRepositoryImpl implements ChatRepository {
     }
 
     @Override
-    public List<ChatMessageEntry> getRecentMessages(String userId, int limit) {
+    public List<ChatMessageEntry> findRecentMessages(String userId, int limit) {
         return chatMessageRepository.findByUserIdOrderByCreatedAtDesc(userId, PageRequest.of(0, limit))
                 .stream()
                 .map(entity -> new ChatMessageEntry(

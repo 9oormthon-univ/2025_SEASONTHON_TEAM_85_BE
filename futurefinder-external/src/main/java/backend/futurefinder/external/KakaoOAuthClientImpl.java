@@ -5,6 +5,7 @@ import backend.futurefinder.kakao.KakaoProfile;
 import backend.futurefinder.kakao.KakaoTokenInfoResponse;
 import backend.futurefinder.kakao.KakaoUserMeResponse;
 import backend.futurefinder.model.auth.OAuthProfile;
+import backend.futurefinder.property.KakaoOAuthProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -20,9 +21,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class KakaoOAuthClientImpl implements ExternalOAuthClient {
 
-    private final WebClient kakaoWebClient; // @Qualifier("kakaoWebClient") 가 필요하면 추가
+    private final WebClient kakaoWebClient;
+    private final KakaoOAuthProperties kakaoProps;
 
-    private static final Duration TIMEOUT = Duration.ofSeconds(5);
+    private Duration timeout() {
+        return Duration.ofSeconds(kakaoProps.getTimeoutSeconds());
+    }
 
     @Override
     public OAuthProfile verifyKakao(String accessToken) {
@@ -37,7 +41,7 @@ public class KakaoOAuthClientImpl implements ExternalOAuthClient {
                                 Mono.error(new IllegalArgumentException("Kakao token invalid: " + body))
                         ))
                 .bodyToMono(KakaoTokenInfoResponse.class)
-                .block(TIMEOUT);
+                .block(timeout());
 
         if (info == null || info.id() == null) {
             throw new IllegalArgumentException("Kakao token invalid: empty body");
@@ -58,7 +62,7 @@ public class KakaoOAuthClientImpl implements ExternalOAuthClient {
                                 Mono.error(new IllegalStateException("Kakao /v2/user/me error: " + body))
                         ))
                 .bodyToMono(KakaoUserMeResponse.class)
-                .block(TIMEOUT);
+                .block(timeout());
 
         String email = Optional.ofNullable(me)
                 .map(KakaoUserMeResponse::kakao_account)

@@ -10,20 +10,21 @@ import backend.futurefinder.repository.user.UserRepository;
 
 import backend.futurefinder.jparepository.user.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional
 public class UserRepositoryImpl implements UserRepository {
 
     private final UserJpaRepository userJpaRepository;
 
 
     @Override
-    public UserInfo read(UserId userId) {
+    public UserInfo find(UserId userId) {
         return userJpaRepository.findById(
                                 userId.getId()
                             ).map(UserJpaEntity::toUser).orElse(null);
@@ -34,7 +35,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 
     @Override
-    public UserInfo readByAccountId(String accountId, AccessStatus status) {
+    public UserInfo findByAccountId(String accountId, AccessStatus status) {
         return userJpaRepository.findByAccountIdAndStatus(
                         accountId, status
                 ).map(UserJpaEntity::toUser) // ✅ 인스턴스 기준 메서드 참조
@@ -42,12 +43,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<UserId> searchUser(String nickName) {
+    public Optional<UserId> findUserIdByNickName(String nickName) {
         return userJpaRepository.findByNickNameAndStatus(nickName, AccessStatus.ACCESS).map(e -> UserId.of(e.getUserId()));
     }
 
     @Override
-    public UserInfo append(String accountId, String userName, String nickName){
+    public UserInfo save(String accountId, String userName, String nickName){
         return userJpaRepository
                 .findByAccountIdAndStatus(accountId, AccessStatus.NEED_CREATE_PASSWORD)
                 .map(entity -> {
@@ -69,7 +70,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 
     @Override
-    public void appendPassword(UserId userId, String password) {
+    public void savePassword(UserId userId, String password) {
         Optional<UserJpaEntity> optional = userJpaRepository.findById(userId.getId());
 
         optional.ifPresent(entity -> {
@@ -97,7 +98,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void UpdateProfile(UserId userId, String userName, String email, String phoneNumber, String birth) {
+    public void updateProfile(UserId userId, String userName, String email, String phoneNumber, String birth) {
          userJpaRepository.findById(userId.getId())
                 .map(user -> {
 
@@ -111,7 +112,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 
     @Override
-    public Optional<UserInfo> remove(UserId userId) {
+    public Optional<UserInfo> delete(UserId userId) {
         return userJpaRepository.findById(userId.getId())
                 .map(entity -> {
                     entity.updateAccessStatus(AccessStatus.DELETE);
@@ -141,7 +142,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserInfo readByNickName(String nickName, AccessStatus status) {
+    public UserInfo findByNickName(String nickName, AccessStatus status) {
         return userJpaRepository.findByNickNameAndStatus(
                         nickName, status
                 ).map(UserJpaEntity::toUser) // ✅ 인스턴스 기준 메서드 참조
@@ -155,7 +156,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 
     @Override
-    public UserInfo appendKakao(String accountId, String userName, String nickName){
+    public UserInfo saveKakao(String accountId, String userName, String nickName){
         return userJpaRepository
                 .findByAccountIdAndStatus(accountId, AccessStatus.ACCESS)
                 .map(entity -> {

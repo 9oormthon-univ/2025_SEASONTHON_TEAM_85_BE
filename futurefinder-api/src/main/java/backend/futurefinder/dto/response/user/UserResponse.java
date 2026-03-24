@@ -12,7 +12,8 @@ public record UserResponse (
 ){
 
     public static UserResponse of(UserInfo userInfo) {
-        return new UserResponse(userInfo.getUserName(), userInfo.getNickName(), userInfo.getEmail(), userInfo.getPhoneNumber(), userInfo.getBirth(), userInfo.getImage().getUrl());
+        String imageUrl = userInfo.getImage() != null ? userInfo.getImage().getUrl() : null;
+        return new UserResponse(userInfo.getUserName(), userInfo.getNickName(), userInfo.getEmail(), userInfo.getPhoneNumber(), userInfo.getBirth(), imageUrl);
     }
 
 

@@ -3,6 +3,7 @@ package backend.futurefinder.service.job;
 import backend.futurefinder.model.job.JobActivityEntry;
 import backend.futurefinder.model.job.JobAwardEntry;
 import backend.futurefinder.model.job.JobEducationEntry;
+import backend.futurefinder.model.job.JobInfo;
 import backend.futurefinder.repository.job.JobRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -56,5 +57,15 @@ public class JobServiceImpl implements JobService {
     @Override
     public void saveAward(JobAwardEntry entry) {
         jobRepository.saveAward(entry);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public JobInfo getJobInfo(String userId) {
+        return new JobInfo(
+                findEducationsByUserId(userId),
+                findActivitiesByUserId(userId),
+                findAwardsByUserId(userId)
+        );
     }
 }

@@ -1,4 +1,3 @@
-// futurefinder-storage 모듈
 package backend.futurefinder.jpaentity.job;
 
 import jakarta.persistence.*;
@@ -13,7 +12,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "job_award")
+@Table(
+        name = "job_award",
+        schema = "futurefinder",
+        indexes = {
+                @Index(name = "jw_idx_user", columnList = "user_id")
+        }
+)
 @Getter
 @Builder
 @NoArgsConstructor

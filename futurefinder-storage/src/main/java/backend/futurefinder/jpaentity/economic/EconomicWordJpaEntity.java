@@ -38,7 +38,6 @@ public class EconomicWordJpaEntity extends BaseEntity {
     @Column(name = "user_id", length = 128, nullable = false)
     private String userId;
 
-
     @Builder
     public EconomicWordJpaEntity(String wordName, String meaning, String userId) {
         this.wordId = UUID.randomUUID().toString();

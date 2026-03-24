@@ -10,14 +10,14 @@ import java.util.List;
 public interface HouseRepository {
 
     // 지역
-    void upsertLocation(String userId, String province, String city, LocationType type);
-    List<LocationEntry> getLocations(String userId, LocationType type);
+    void saveLocation(String userId, String province, String city, LocationType type);
+    List<LocationEntry> findLocations(String userId, LocationType type);
 
     // 청약 계좌 관리
-    void upsertSubscriptionAccount(String userId, String bankName, String accountNumber);
-    BigDecimal getSubscriptionTotal(String userId);
+    void saveSubscriptionAccount(String userId, String bankName, String accountNumber);
+    BigDecimal findSubscriptionTotal(String userId);
 
     // 입금 관리
-    void addDeposit(String userId, String accountNumber, BigDecimal amount, String memo);
-    List<DepositEntry> getRecentDeposits(String userId, int limit);
+    void saveDeposit(String userId, String accountNumber, BigDecimal amount, String memo);
+    List<DepositEntry> findRecentDeposits(String userId, int limit);
 }

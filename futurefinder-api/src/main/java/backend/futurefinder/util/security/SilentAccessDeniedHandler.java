@@ -22,7 +22,7 @@ public class SilentAccessDeniedHandler implements AccessDeniedHandler {
         log.warn("Access denied on {}: {}", request.getRequestURI(), accessDeniedException.getMessage());
 
         if (!response.isCommitted()) {
-            response.setStatus(HttpServletResponse.SC_OK); // ❗ 일부 API 클라이언트를 위해 200 반환
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.getWriter().write("");
             response.getWriter().flush();
         }

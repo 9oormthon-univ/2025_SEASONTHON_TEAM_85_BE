@@ -14,14 +14,14 @@ public class UserValidator {
     private final UserRepository userRepository;
 
     public void isNotAlreadyCreated(String accountId) {
-        if (userRepository.readByAccountId(accountId, AccessStatus.ACCESS) != null) {
+        if (userRepository.findByAccountId(accountId, AccessStatus.ACCESS) != null) {
             throw new ConflictException(ErrorCode.USER_ALREADY_CREATED);
         }
     }
 
 
     public void nickNameExists(String nickName) {
-        if (userRepository.searchUser(nickName).isPresent()) {
+        if (userRepository.findUserIdByNickName(nickName).isPresent()) {
             throw new ConflictException(ErrorCode.USER_NICKNAME_EXISTS);
         }
     }

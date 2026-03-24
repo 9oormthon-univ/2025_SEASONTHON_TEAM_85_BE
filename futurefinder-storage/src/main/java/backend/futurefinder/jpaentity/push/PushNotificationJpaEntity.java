@@ -42,6 +42,7 @@ public class PushNotificationJpaEntity {
     @Enumerated(EnumType.STRING)
     private NotificationStatus passwordStatus = NotificationStatus.ALLOWED;
 
+    @Column(name = "user_id")
     private String userId;
 
     @Builder

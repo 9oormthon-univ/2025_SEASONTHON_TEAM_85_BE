@@ -16,5 +16,10 @@ public class RecruitmentApiProperties {
     private String serviceKey; // 반드시 설정
     /** 타임아웃(초) */
     private int timeoutSeconds = 6;
-
+    /** 외부 API에서 한 번에 가져올 건수 */
+    private int fetchSize = 50;
+    /** 내부 페이징 단위 */
+    private int pageSize = 5;
+    /** 캐시 유지 시간(초) */
+    private int cacheTtlSeconds = 60;
 }

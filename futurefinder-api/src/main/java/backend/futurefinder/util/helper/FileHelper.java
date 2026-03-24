@@ -1,8 +1,8 @@
 package backend.futurefinder.util.helper;
 
-import backend.futurefinder.error.AuthorizationException;
 import backend.futurefinder.error.ConflictException;
 import backend.futurefinder.error.ErrorCode;
+import backend.futurefinder.error.FileException;
 import backend.futurefinder.model.media.FileData;
 import backend.futurefinder.model.media.MediaType;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,15 +42,15 @@ public final class FileHelper {
         );
     }
 
-    public static List<FileData> convertMultipartFileToFileDataList(List<MultipartFile> files)
-            throws IOException, AuthorizationException {
+    public static List<FileData> convertMultipartFileToFileDataList(List<MultipartFile> files) {
         return files.stream()
                 .map(file -> {
                     try {
                         return convertMultipartFileToFileData(file);
-                    } catch (IOException | ConflictException e) {
-                        // 여기서 바로 RuntimeException으로 감싸거나 다시 던질 수 있음
-                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new FileException(ErrorCode.FILE_CONVERT_FAILED, e);
+                    } catch (ConflictException e) {
+                        throw e;
                     }
                 })
                 .collect(Collectors.toList());

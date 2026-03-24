@@ -30,8 +30,6 @@ public class HouseController {
     private final HouseService houseService;
     private final ChatbotService chatbotService;
 
-    private String uid(UserId userId) { return userId.getId(); }
-
     // ------- 지역 -------
     @Operation(summary = "현재 주거지 등록", security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/location/current")
@@ -39,7 +37,7 @@ public class HouseController {
             @CurrentUser UserId userId,
             @RequestBody LocationRequest req
     ) {
-        houseService.upsertLocation(uid(userId), req.province(), req.city(), LocationType.CURRENT);
+        houseService.saveLocation(userId.getId(), req.province(), req.city(), LocationType.CURRENT);
         return ResponseHelper.successOnly(); // ✅ 인자 없음 OK
     }
 
@@ -49,7 +47,7 @@ public class HouseController {
             @CurrentUser UserId userId,
             @RequestBody LocationRequest req
     ) {
-        houseService.upsertLocation(uid(userId), req.province(), req.city(), LocationType.INTEREST);
+        houseService.saveLocation(userId.getId(), req.province(), req.city(), LocationType.INTEREST);
         return ResponseHelper.successOnly(); // ✅
     }
 
@@ -58,11 +56,11 @@ public class HouseController {
     public ResponseEntity<HttpResponse<List<LocationResponse>>> getCurrent(
             @CurrentUser UserId userId
     ) {
-        List<LocationResponse> res = houseService.getLocations(uid(userId), LocationType.CURRENT)
+        List<LocationResponse> res = houseService.findLocations(userId.getId(), LocationType.CURRENT)
                 .stream()
-                .map(e -> new LocationResponse(e.getProvince(), e.getCity(), "CURRENT"))
+                .map(e -> LocationResponse.from(e, "CURRENT"))
                 .toList();
-        return ResponseHelper.success(res); // ✅ success(data)
+        return ResponseHelper.success(res);
     }
 
     @Operation(summary = "관심 지역 조회", security = @SecurityRequirement(name = "bearerAuth"))
@@ -70,9 +68,9 @@ public class HouseController {
     public ResponseEntity<HttpResponse<List<LocationResponse>>> getInterest(
             @CurrentUser UserId userId
     ) {
-        List<LocationResponse> res = houseService.getLocations(uid(userId), LocationType.INTEREST)
+        List<LocationResponse> res = houseService.findLocations(userId.getId(), LocationType.INTEREST)
                 .stream()
-                .map(e -> new LocationResponse(e.getProvince(), e.getCity(), "INTEREST"))
+                .map(e -> LocationResponse.from(e, "INTEREST"))
                 .toList();
         return ResponseHelper.success(res);
     }
@@ -84,14 +82,14 @@ public class HouseController {
             @CurrentUser UserId userId,
             @RequestBody AccountRequest req
     ) {
-        houseService.upsertSubscriptionAccount(uid(userId), req.bankName(), req.accountNumber());
+        houseService.saveSubscriptionAccount(userId.getId(), req.bankName(), req.accountNumber());
         return ResponseHelper.successOnly(); // ✅
     }
 
     @Operation(summary = "청약 총액 조회", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/subscription/amount")
     public ResponseEntity<HttpResponse<BigDecimal>> getAmount(@CurrentUser UserId userId) {
-        return ResponseHelper.success(houseService.getSubscriptionTotal(uid(userId)));
+        return ResponseHelper.success(houseService.findSubscriptionTotal(userId.getId()));
     }
 
     @Operation(summary = "입금 등록", security = @SecurityRequirement(name = "bearerAuth"))
@@ -100,7 +98,7 @@ public class HouseController {
             @CurrentUser UserId userId,
             @RequestBody DepositRequest req
     ) {
-        houseService.addDeposit(uid(userId), req.accountNumber(), req.amount(), req.memo());
+        houseService.saveDeposit(userId.getId(), req.accountNumber(), req.amount(), req.memo());
         return ResponseHelper.successOnly(); // ✅
     }
 
@@ -110,15 +108,9 @@ public class HouseController {
             @CurrentUser UserId userId,
             @RequestParam(defaultValue = "3") int limit
     ) {
-        List<DepositResponse> res = houseService.getRecentDeposits(uid(userId), limit)
+        List<DepositResponse> res = houseService.findRecentDeposits(userId.getId(), limit)
                 .stream()
-                .map(d -> new DepositResponse(
-                        d.getId(),
-                        d.getSubscriptionAccountId(),
-                        d.getDepositAmount(),
-                        d.getMemo(),
-                        d.getCreatedAt()
-                ))
+                .map(DepositResponse::from)
                 .toList();
         return ResponseHelper.success(res);
     }
@@ -126,21 +118,7 @@ public class HouseController {
     @Operation(summary = "하우스 요약", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/summary")
     public ResponseEntity<HttpResponse<HouseSummaryResponse>> getSummary(@CurrentUser UserId userId) {
-
-        var current = houseService.getLocations(uid(userId), LocationType.CURRENT).stream()
-                .map(e -> new LocationResponse(e.getProvince(), e.getCity(), "CURRENT")).toList();
-
-        var interest = houseService.getLocations(uid(userId), LocationType.INTEREST).stream()
-                .map(e -> new LocationResponse(e.getProvince(), e.getCity(), "INTEREST")).toList();
-
-        var total = houseService.getSubscriptionTotal(uid(userId));
-
-        var deposits = houseService.getRecentDeposits(uid(userId), 3).stream()
-                .map(d -> new DepositResponse(d.getId(), d.getSubscriptionAccountId(),
-                        d.getDepositAmount(), d.getMemo(), d.getCreatedAt()))
-                .toList();
-
-        return ResponseHelper.success(new HouseSummaryResponse(current, interest, total, deposits));
+        return ResponseHelper.success(HouseSummaryResponse.from(houseService.getSummary(userId.getId())));
     }
 
     // ------- 챗봇 -------
@@ -151,7 +129,7 @@ public class HouseController {
             @CurrentUser UserId userId,
             @RequestBody @Valid ChatRequest req
     ) {
-        String botResponse = chatbotService.sendMessage(uid(userId), req.message());
+        String botResponse = chatbotService.sendMessage(userId.getId(), req.message());
 
         ChatResponse response = new ChatResponse(
                 null, // messageId는 간단히 null로
@@ -169,7 +147,7 @@ public class HouseController {
             @CurrentUser UserId userId,
             @RequestParam(defaultValue = "10") int limit
     ) {
-        List<ChatMessageEntry> messages = chatbotService.getChatHistory(uid(userId), limit);
+        List<ChatMessageEntry> messages = chatbotService.getChatHistory(userId.getId(), limit);
 
         List<ChatResponse> chatResponses = messages.stream()
                 .map(msg -> new ChatResponse(

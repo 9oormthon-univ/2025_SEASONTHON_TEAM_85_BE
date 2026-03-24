@@ -39,28 +39,28 @@ public class UserService {
     ){
         userValidator.isNotAlreadyCreated(accountId);
         userValidator.nickNameExists(nickName);
-        UserInfo user = userAppender.append(accountId, userName, nickName);
+        UserInfo user = userAppender.save(accountId, userName, nickName);
         userRemover.removePushToken(device);
         userAppender.appendUserPushToken(user, appToken, device);
         return user;
     }
 
     public void createPassword(UserId userId, String password) {
-        userAppender.appendPassword(userId, password);
+        userAppender.savePassword(userId, password);
     }
 
 
     public UserInfo getUserByAccountId(String accountId, AccessStatus accessStatus) {
-        UserInfo userInfo = userReader.readByAccountId(accountId, accessStatus);
+        UserInfo userInfo = userReader.findByAccountId(accountId, accessStatus);
         return userInfo;
     }
 
     public UserInfo getUserProfile(UserId userId){
-        return userReader.read(userId);
+        return userReader.find(userId);
     }
 
     public void changeUserProfile(UserId userId, String userName, String email, String phoneNumber, String birth){
-        userUpdater.UpdateProfile(userId, userName, email, phoneNumber, birth);
+        userUpdater.updateProfile(userId, userName, email, phoneNumber, birth);
     }
 
 
@@ -82,7 +82,7 @@ public class UserService {
 
 
     public void deleteUser(UserId userId) {
-        UserInfo removedUser = userRemover.remove(userId);
+        UserInfo removedUser = userRemover.delete(userId);
         fileHandler.handleOldFile(removedUser.getImage());
     }
 
@@ -98,7 +98,7 @@ public class UserService {
 
     // 단순히 아이디 찾기용
     public String findAccountIdByNickName(String nickName, AccessStatus accessStatus) {
-        UserInfo userInfo = userReader.readByNickName(nickName, accessStatus);
+        UserInfo userInfo = userReader.findByNickName(nickName, accessStatus);
         return userInfo.getAccountId();
     }
 
@@ -108,13 +108,13 @@ public class UserService {
         final String name = displayName == null ? "" : displayName.trim();
 
         // 1) 기존 가입자 조회 (ACCESS 우선 → 없으면 NEED_CREATE_PASSWORD)
-        UserInfo user = userReader.readByKakaoId(key, AccessStatus.ACCESS);
+        UserInfo user = userReader.findByKakaoId(key, AccessStatus.ACCESS);
 
         // 2) 신규 가입
         if (user == null) {
             // 기존 정책 유지: nickName = accountKey (유니크 보장)
             userValidator.nickNameExists(key);
-            user = userAppender.appendKakao(key, name /* userName */, key /* nickName */);
+            user = userAppender.saveKakao(key, name /* userName */, key /* nickName */);
         }
 
         // 3) 푸시 토큰 갱신

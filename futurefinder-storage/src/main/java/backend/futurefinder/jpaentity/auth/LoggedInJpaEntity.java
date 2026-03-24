@@ -3,10 +3,7 @@ package backend.futurefinder.jpaentity.auth;
 
 import backend.futurefinder.model.token.RefreshToken;
 import backend.futurefinder.model.user.UserId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +30,7 @@ public class LoggedInJpaEntity {
 
     private String refreshToken;
 
+    @Column(name = "user_id")
     private String userId;
 
     private LocalDateTime expiredAt;
