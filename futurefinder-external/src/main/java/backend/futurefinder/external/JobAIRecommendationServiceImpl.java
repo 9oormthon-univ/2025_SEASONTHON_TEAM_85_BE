@@ -91,7 +91,11 @@ public class JobAIRecommendationServiceImpl implements JobAIRecommendationServic
                 마감일이 가장 임박한 순서대로 정렬해서 추천해주세요.
 
                 다음 JSON 형식으로만 응답해주세요 (다른 텍스트 없이):
-                [{"title":"활동명","type":"CLUB","description":"활동 설명","period":"활동 시기","benefits":"참여 시 이익"}]
+                [
+                  {"title": "활동명", "type": "CLUB", "description": "활동 설명", "period": "활동 시기", "benefits": "참여 시 이익"},
+                  {"title": "활동명", "type": "COMPETITION", "description": "활동 설명", "period": "활동 시기", "benefits": "참여 시 이익"},
+                  {"title": "활동명", "type": "INTERNSHIP", "description": "활동 설명", "period": "활동 시기", "benefits": "참여 시 이익"}
+                ]
                 """.formatted(profile);
     }
 
@@ -103,7 +107,11 @@ public class JobAIRecommendationServiceImpl implements JobAIRecommendationServic
                 %s
 
                 다음 JSON 형식으로만 응답해주세요 (다른 텍스트 없이):
-                [{"companyName":"회사명","position":"포지션명","description":"직무 설명","requirements":"지원 자격 요건","deadline":"D-30","matchReason":"추천 이유"}]
+                [
+                  {"companyName": "회사명", "position": "포지션명", "description": "직무 설명", "requirements": "지원 자격 요건", "deadline": "D-30", "matchReason": "추천 이유"},
+                  {"companyName": "회사명", "position": "포지션명", "description": "직무 설명", "requirements": "지원 자격 요건", "deadline": "D-45", "matchReason": "추천 이유"},
+                  {"companyName": "회사명", "position": "포지션명", "description": "직무 설명", "requirements": "지원 자격 요건", "deadline": "D-60", "matchReason": "추천 이유"}
+                ]
                 """.formatted(profile);
     }
 
