@@ -18,4 +18,6 @@ public class StockApiProperties {
     private int pageSize = 100;
     /** 최근 영업일 탐색 최대 일수 */
     private int maxBackDays = 7;
+    /** 결과 상위 N개 제한 */
+    private int topLimit = 50;
 }

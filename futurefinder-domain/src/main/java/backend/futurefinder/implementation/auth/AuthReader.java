@@ -17,7 +17,7 @@ public class AuthReader {
 
 
     public RefreshToken readLoginInfo(String refreshToken, UserId userId) {
-        return loggedInRepository.read(refreshToken, userId)
+        return loggedInRepository.find(refreshToken, userId)
                 .orElseThrow(() -> new AuthorizationException(ErrorCode.INVALID_TOKEN));
     }
 }

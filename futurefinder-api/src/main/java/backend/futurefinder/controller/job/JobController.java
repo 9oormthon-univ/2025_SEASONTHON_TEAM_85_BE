@@ -33,53 +33,13 @@ public class JobController {
 
     private final JobService jobService;
     private final JobAIRecommendationService jobAIRecommendationService;
-    private String uid(UserId u) { return u.getId(); }
-
     // ------- 정보 확인 (통합 조회) -------
     @Operation(summary = "취업 관련 정보 전체 조회", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/info")
     public ResponseEntity<HttpResponse<JobInfoResponse>> getJobInfo(
             @CurrentUser UserId userId
     ) {
-        // 학업 정보 목록 조회 (여러 개 가능)
-        var educations = jobService.findEducationsByUserId(uid(userId))
-                .stream()
-                .map(e -> new EducationResponse(
-                        e.id(),
-                        e.schoolName(),
-                        e.major(),
-                        e.status(),
-                        e.graduationYear()
-                ))
-                .toList();
-
-        // 대외활동 목록 조회
-        var activities = jobService.findActivitiesByUserId(uid(userId))
-                .stream()
-                .map(a -> new ActivityResponse(
-                        a.id(),
-                        a.type(),
-                        a.title(),
-                        a.startedOn(),
-                        a.endedOn(),
-                        a.memo()
-                ))
-                .toList();
-
-        // 수상 내역 목록 조회
-        var awards = jobService.findAwardsByUserId(uid(userId))
-                .stream()
-                .map(a -> new AwardResponse(
-                        a.id(),
-                        a.awardName(),
-                        a.organization(),
-                        a.awardedOn(),
-                        a.description()
-                ))
-                .toList();
-
-        var response = new JobInfoResponse(educations, activities, awards);
-        return ResponseHelper.success(response);
+        return ResponseHelper.success(JobInfoResponse.from(jobService.getJobInfo(userId.getId())));
     }
 
     // ------- 학력 -------
@@ -91,7 +51,7 @@ public class JobController {
     ) {
         jobService.saveEducation(new JobEducationEntry(
                 null,
-                uid(userId),
+                userId.getId(),
                 req.schoolName(),
                 req.major(),
                 req.status(),
@@ -105,14 +65,8 @@ public class JobController {
     public ResponseEntity<HttpResponse<EducationResponse>> getEducation(
             @CurrentUser UserId userId
     ) {
-        var edu = jobService.findEducationByUserId(uid(userId))
-                .map(e -> new EducationResponse(
-                        e.id(),           // getId() → id()
-                        e.schoolName(),   // getSchoolName() → schoolName()
-                        e.major(),        // getMajor() → major()
-                        e.status(),       // getStatus() → status()
-                        e.graduationYear() // getGraduationYear() → graduationYear()
-                ))
+        var edu = jobService.findEducationByUserId(userId.getId())
+                .map(EducationResponse::from)
                 .orElse(null);
         return ResponseHelper.success(edu);
     }
@@ -126,7 +80,7 @@ public class JobController {
     ) {
         jobService.saveActivity(new JobActivityEntry(
                 null,
-                uid(userId),
+                userId.getId(),
                 req.type(),
                 req.title(),
                 req.startedAt(),
@@ -141,16 +95,9 @@ public class JobController {
     public ResponseEntity<HttpResponse<List<ActivityResponse>>> getActivities(
             @CurrentUser UserId userId
     ) {
-        var res = jobService.findActivitiesByUserId(uid(userId))
+        var res = jobService.findActivitiesByUserId(userId.getId())
                 .stream()
-                .map(a -> new ActivityResponse(
-                        a.id(),        // getId() → id()
-                        a.type(),      // getType() → type()
-                        a.title(),     // getTitle() → title()
-                        a.startedOn(), // getStartedAt() → startedAt()
-                        a.endedOn(),   // getEndedAt() → endedAt()
-                        a.memo()       // getMemo() → memo()
-                ))
+                .map(ActivityResponse::from)
                 .toList();
         return ResponseHelper.success(res);
     }
@@ -164,7 +111,7 @@ public class JobController {
     ) {
         jobService.saveAward(new JobAwardEntry(
                 null,
-                uid(userId),
+                userId.getId(),
                 req.awardName(),
                 req.organization(),
                 req.awardedOn(),
@@ -178,15 +125,9 @@ public class JobController {
     public ResponseEntity<HttpResponse<List<AwardResponse>>> getAwards(
             @CurrentUser UserId userId
     ) {
-        var res = jobService.findAwardsByUserId(uid(userId))
+        var res = jobService.findAwardsByUserId(userId.getId())
                 .stream()
-                .map(a -> new AwardResponse(
-                        a.id(),
-                        a.awardName(),
-                        a.organization(),
-                        a.awardedOn(),
-                        a.description()
-                ))
+                .map(AwardResponse::from)
                 .toList();
         return ResponseHelper.success(res);
     }

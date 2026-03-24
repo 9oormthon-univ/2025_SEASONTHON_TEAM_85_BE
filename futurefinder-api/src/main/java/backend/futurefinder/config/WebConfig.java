@@ -33,8 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        System.out.println(">> UserArgumentResolver registered");
-        resolvers.add(userArgumentResolver); // ✅ 반드시 빈으로 주입된 resolver 사용
+        resolvers.add(userArgumentResolver);
     }
 
     @Override

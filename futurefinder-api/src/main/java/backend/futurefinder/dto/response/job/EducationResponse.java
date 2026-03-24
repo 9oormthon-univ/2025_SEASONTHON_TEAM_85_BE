@@ -1,5 +1,6 @@
-// futurefinder-api/src/main/java/backend/futurefinder/dto/response/job/EducationResponse.java
 package backend.futurefinder.dto.response.job;
+
+import backend.futurefinder.model.job.JobEducationEntry;
 
 public record EducationResponse(
         Long id,
@@ -7,4 +8,8 @@ public record EducationResponse(
         String major,
         String status,
         Integer graduationYear
-) {}
+) {
+    public static EducationResponse from(JobEducationEntry e) {
+        return new EducationResponse(e.id(), e.schoolName(), e.major(), e.status(), e.graduationYear());
+    }
+}

@@ -14,7 +14,6 @@ import backend.futurefinder.response.SuccessCreateResponse;
 import backend.futurefinder.service.word.WordService;
 import backend.futurefinder.util.helper.ResponseHelper;
 import backend.futurefinder.util.security.CurrentUser;
-import com.amazonaws.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

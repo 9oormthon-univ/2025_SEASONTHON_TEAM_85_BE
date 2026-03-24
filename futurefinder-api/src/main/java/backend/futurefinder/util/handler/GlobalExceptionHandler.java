@@ -1,9 +1,6 @@
 package backend.futurefinder.util.handler;
 
-import backend.futurefinder.error.AuthorizationException;
-import backend.futurefinder.error.ConflictException;
-import backend.futurefinder.error.ErrorCode;
-import backend.futurefinder.error.NotFoundException;
+import backend.futurefinder.error.*;;
 import backend.futurefinder.response.ErrorResponse;
 import backend.futurefinder.response.HttpResponse;
 import backend.futurefinder.util.helper.ResponseHelper;
@@ -89,10 +86,16 @@ public class GlobalExceptionHandler {
         return handleException(e, e.getErrorCode(), HttpStatus.CONFLICT);
     }
 
+    // 파일 처리 예외
+    @ExceptionHandler(FileException.class)
+    protected ResponseEntity<HttpResponse<ErrorResponse>> handleFileException(FileException e) {
+        return handleException(e, e.getErrorCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     // Spring Security가 인증 정보 부족할 때 던짐 (예: 토큰 없음, 로그인 안 함)
     @ExceptionHandler(InsufficientAuthenticationException.class)
     protected ResponseEntity<HttpResponse<ErrorResponse>> handleInsufficientAuthenticationException(HttpServletRequest req){
-        System.out.println(">> GEH InsufficientAuthenticationException uri=" + req.getRequestURI());
+        log.warn("InsufficientAuthenticationException uri={}", req.getRequestURI());
         return handleException(new InsufficientAuthenticationException("Unauthorized"), ErrorCode.NOT_AUTHORIZED, HttpStatus.UNAUTHORIZED);
     }
 

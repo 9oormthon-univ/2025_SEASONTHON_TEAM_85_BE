@@ -11,6 +11,6 @@ public class AuthRemover {
     private final LoggedInRepository loggedInRepository;
 
     public void removeLoginInfo(String refreshToken) {
-        loggedInRepository.remove(refreshToken);
+        loggedInRepository.delete(refreshToken);
     }
 }

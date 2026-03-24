@@ -20,7 +20,7 @@ public class LoggedInRepositoryImpl implements LoggedInRepository {
 
 
     @Override
-    public void append(RefreshToken refreshToken, UserId userId) {
+    public void save(RefreshToken refreshToken, UserId userId) {
         LoggedInJpaEntity entity = LoggedInJpaEntity.generate(refreshToken, userId);
         loggedInJpaRepository.save(entity);
     }
@@ -28,7 +28,7 @@ public class LoggedInRepositoryImpl implements LoggedInRepository {
 
     @Transactional
     @Override
-    public void remove(String refreshToken) {
+    public void delete(String refreshToken) {
         loggedInJpaRepository.deleteByRefreshToken(refreshToken);
     }
 
@@ -43,7 +43,7 @@ public class LoggedInRepositoryImpl implements LoggedInRepository {
     }
 
     @Override
-    public Optional<RefreshToken> read(String refreshToken, UserId userId) {
+    public Optional<RefreshToken> find(String refreshToken, UserId userId) {
         return loggedInJpaRepository
                 .findByRefreshTokenAndUserId(refreshToken, userId.getId())
                 .map(LoggedInJpaEntity::toRefreshToken);

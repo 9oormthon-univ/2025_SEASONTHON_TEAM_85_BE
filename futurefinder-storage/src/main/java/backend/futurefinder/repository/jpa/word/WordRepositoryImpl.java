@@ -26,7 +26,7 @@ public class WordRepositoryImpl implements WordRepository {
 
     @Override
     @Transactional
-    public boolean append(UserId userId, String word, String meaning) {
+    public boolean save(UserId userId, String word, String meaning) {
         final String uid = userId.getId();
 
         return wordJpaRepository.findByUserIdAndWordName(uid, word)
@@ -39,7 +39,7 @@ public class WordRepositoryImpl implements WordRepository {
     }
 
     @Override
-    public List<ScrapWord> reads(UserId userId, int page){
+    public List<ScrapWord> findAll(UserId userId, int page){
         Sort sort = SortType.LATEST.toSort().and(Sort.by(Sort.Direction.DESC, "wordId"));
         Pageable pageable = PageRequest.of(page, 5, sort);
 
@@ -52,7 +52,7 @@ public class WordRepositoryImpl implements WordRepository {
     }
 
     @Override
-    public List<PopularWord> readPopularNames() {
+    public List<PopularWord> findPopularNames() {
         Pageable top10 = PageRequest.of(0, 10); // LIMIT 10
         List<String> names = wordJpaRepository.findPopularWordNames(top10);
         return names.stream()

@@ -29,10 +29,10 @@ public class WordReader {
     }
 
     public List<ScrapWord> reads(UserId userId, int page){
-        return wordRepository.reads(userId, page);
+        return wordRepository.findAll(userId, page);
     }
     public List<PopularWord> reads(){
-        return wordRepository.readPopularNames();
+        return wordRepository.findPopularNames();
     }
 
 

@@ -5,6 +5,6 @@ import backend.futurefinder.model.house.ChatMessageEntry;
 import java.util.List;
 
 public interface ChatRepository {
-    ChatMessageEntry saveMessage(String userId, String userMessage, String botResponse);
-    List<ChatMessageEntry> getRecentMessages(String userId, int limit);
+    ChatMessageEntry save(String userId, String userMessage, String botResponse);
+    List<ChatMessageEntry> findRecentMessages(String userId, int limit);
 }

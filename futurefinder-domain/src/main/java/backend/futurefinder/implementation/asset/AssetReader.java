@@ -18,7 +18,7 @@ public class AssetReader {
 
 
     public List<Asset> reads(UserId userId){
-        return assetRepository.reads(userId);
+        return assetRepository.findAll(userId);
     }
 
 

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(
         name = "chat_message",
+        schema = "futurefinder",
         indexes = {
                 @Index(name = "cm_idx_user_time", columnList = "user_id, created_at")
         }

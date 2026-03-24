@@ -4,6 +4,7 @@ package backend.futurefinder.service.job;
 import backend.futurefinder.model.job.JobActivityEntry;
 import backend.futurefinder.model.job.JobAwardEntry;
 import backend.futurefinder.model.job.JobEducationEntry;
+import backend.futurefinder.model.job.JobInfo;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +20,6 @@ public interface JobService {
 
     List<JobAwardEntry> findAwardsByUserId(String userId);
     void saveAward(JobAwardEntry entry);
+
+    JobInfo getJobInfo(String userId);
 }

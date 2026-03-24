@@ -12,13 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional
 public class PushNotificationRepositoryImpl implements PushNotificationRepository {
 
     private final PushNotificationJpaRepository pushNotificationJpaRepository;
 
     @Override
-    @Transactional
-    public void remove(PushInfo.Device device) {
+    public void delete(PushInfo.Device device) {
         pushNotificationJpaRepository.deleteAllByDeviceIdAndProvider(
                 device.getDeviceId(),
                 device.getProvider()
@@ -26,7 +26,7 @@ public class PushNotificationRepositoryImpl implements PushNotificationRepositor
     }
 
     @Override
-    public void append(PushInfo.Device device, String appToken, UserInfo userInfo) {
+    public void save(PushInfo.Device device, String appToken, UserInfo userInfo) {
         PushNotificationJpaEntity entity = pushNotificationJpaRepository.findByDeviceIdAndUserId(
                 device.getDeviceId(), userInfo.getUserId().getId()
         );

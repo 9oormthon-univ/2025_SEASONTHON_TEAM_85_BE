@@ -17,21 +17,21 @@ public class UserReader {
     private final UserRepository userRepository;
 
 
-    public UserInfo read(UserId userId){
-        return userRepository.read(userId);
+    public UserInfo find(UserId userId){
+        return userRepository.find(userId);
     }
 
 
-    public UserInfo readByAccountId(String accountId, AccessStatus accessStatus){
-        UserInfo userInfo = userRepository.readByAccountId(accountId, accessStatus);
+    public UserInfo findByAccountId(String accountId, AccessStatus accessStatus){
+        UserInfo userInfo = userRepository.findByAccountId(accountId, accessStatus);
         if (userInfo == null) {
             throw new NotFoundException(ErrorCode.USER_NOT_FOUND);
         }
         return userInfo;
     }
 
-    public UserInfo readByNickName(String nickName, AccessStatus accessStatus) {
-        UserInfo userInfo = userRepository.readByNickName(nickName, accessStatus);
+    public UserInfo findByNickName(String nickName, AccessStatus accessStatus) {
+        UserInfo userInfo = userRepository.findByNickName(nickName, accessStatus);
         if (userInfo == null) {
             throw new NotFoundException(ErrorCode.USER_NOT_FOUND);
         }
@@ -39,8 +39,8 @@ public class UserReader {
     }
 
 
-    public UserInfo readByKakaoId(String accountId, AccessStatus accessStatus){
-        return userRepository.readByAccountId(accountId, accessStatus);
+    public UserInfo findByKakaoId(String accountId, AccessStatus accessStatus){
+        return userRepository.findByAccountId(accountId, accessStatus);
     }
 
 }

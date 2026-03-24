@@ -15,7 +15,7 @@ public class AssetAppender {
     private final AssetRepository assetRepository;
 
     public void append(UserId userId, AssetType assetType, BigDecimal amountKrw, String note, String BankName, String accountNumber){
-        assetRepository.append(userId, assetType, amountKrw, note, BankName, accountNumber);
+        assetRepository.save(userId, assetType, amountKrw, note, BankName, accountNumber);
     }
 
 

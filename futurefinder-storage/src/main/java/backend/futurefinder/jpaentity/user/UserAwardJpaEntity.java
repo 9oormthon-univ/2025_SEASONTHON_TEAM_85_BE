@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(
         name = "user_award",
+        schema = "futurefinder",
         indexes = {
                 @Index(name = "ua_idx_user_time", columnList = "user_id, awarded_on, award_id"),
                 @Index(name = "ua_idx_activity", columnList = "activity_id")

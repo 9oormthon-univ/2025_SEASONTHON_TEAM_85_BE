@@ -7,7 +7,13 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "job_activity")
+@Table(
+        name = "job_activity",
+        schema = "futurefinder",
+        indexes = {
+                @Index(name = "ja_idx_user", columnList = "user_id")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,7 +25,7 @@ public class JobActivityJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "user_id", nullable = false)
     private String userId;
 
     @Enumerated(EnumType.STRING)

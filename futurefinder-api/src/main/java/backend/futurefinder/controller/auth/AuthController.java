@@ -625,7 +625,7 @@ public class AuthController {
             )
             @RequestHeader("X-App-Token") String appToken
     ) {
-        String token = authorization.replaceFirst("(?i)^Bearer\\s+", "").trim();
+        String token = jwtTokenUtil.cleanedToken(authorization);
 
         PushInfo.Device device = PushInfo.Device.of(
                 deviceId,
