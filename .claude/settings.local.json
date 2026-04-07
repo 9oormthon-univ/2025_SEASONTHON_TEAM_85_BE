@@ -4,7 +4,11 @@
       "Bash(ls:*)",
       "Bash(wc -l /c/Users/yhkim/Desktop/futurefinder/futurefinder/futurefinder-api/src/main/java/backend/futurefinder/controller/*/*.java)",
       "Bash(./gradlew compileJava)",
-      "Bash(./gradlew clean:*)"
+      "Bash(./gradlew clean:*)",
+      "Bash(git log:*)",
+      "Bash(grep -i -E '\\(AKIA[0-9A-Z]{16}|password\\\\s*=\\\\s*[^\\\\$\\\\{].+|secret\\\\s*=\\\\s*[^\\\\$\\\\{].+\\)')",
+      "Bash(grep -E \"\\(Repository|Impl\\)\\\\.java$\")",
+      "Bash(git:*)"
     ]
   }
 }

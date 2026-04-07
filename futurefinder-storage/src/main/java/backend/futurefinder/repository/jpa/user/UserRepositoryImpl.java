@@ -1,6 +1,8 @@
 package backend.futurefinder.repository.jpa.user;
 
 
+import backend.futurefinder.error.ErrorCode;
+import backend.futurefinder.error.NotFoundException;
 import backend.futurefinder.jpaentity.user.UserJpaEntity;
 import backend.futurefinder.model.media.Media;
 import backend.futurefinder.model.user.AccessStatus;
@@ -51,13 +53,8 @@ public class UserRepositoryImpl implements UserRepository {
     public UserInfo save(String accountId, String userName, String nickName){
         return userJpaRepository
                 .findByAccountIdAndStatus(accountId, AccessStatus.NEED_CREATE_PASSWORD)
-                .map(entity -> {
-                    userJpaRepository.save(entity);
-                    return entity.toUser();
-                })
+                .map(UserJpaEntity::toUser)
                 .orElseGet(() -> {
-                    // UserJpaEntity.generate(...)가 PhoneNumber 기반이라면,
-                    // accountId 기반의 팩토리 메서드를 새로 만들어줘야 함
                     UserJpaEntity userEntity = UserJpaEntity.generate(
                             userName,
                             nickName,
@@ -71,13 +68,12 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void savePassword(UserId userId, String password) {
-        Optional<UserJpaEntity> optional = userJpaRepository.findById(userId.getId());
+        UserJpaEntity entity = userJpaRepository.findById(userId.getId())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        optional.ifPresent(entity -> {
-            entity.updateAccessStatus(AccessStatus.ACCESS);
-            entity.updatePassword(password);
-            userJpaRepository.save(entity);
-        });
+        entity.updateAccessStatus(AccessStatus.ACCESS);
+        entity.updatePassword(password);
+        userJpaRepository.save(entity);
     }
 
     @Override
@@ -99,15 +95,11 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void updateProfile(UserId userId, String userName, String email, String phoneNumber, String birth) {
-         userJpaRepository.findById(userId.getId())
-                .map(user -> {
+        UserJpaEntity entity = userJpaRepository.findById(userId.getId())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
-                    user.updateUserProfile(userName, email, phoneNumber, birth);
-
-                    userJpaRepository.save(user);
-
-                    return null;
-                });
+        entity.updateUserProfile(userName, email, phoneNumber, birth);
+        userJpaRepository.save(entity);
     }
 
 
@@ -159,13 +151,8 @@ public class UserRepositoryImpl implements UserRepository {
     public UserInfo saveKakao(String accountId, String userName, String nickName){
         return userJpaRepository
                 .findByAccountIdAndStatus(accountId, AccessStatus.ACCESS)
-                .map(entity -> {
-                    userJpaRepository.save(entity);
-                    return entity.toUser();
-                })
+                .map(UserJpaEntity::toUser)
                 .orElseGet(() -> {
-                    // UserJpaEntity.generate(...)가 Id가 기반이라면,
-                    // accountId 기반의 팩토리 메서드를 새로 만들어줘야 함
                     UserJpaEntity userEntity = UserJpaEntity.generate(
                             userName,
                             nickName,

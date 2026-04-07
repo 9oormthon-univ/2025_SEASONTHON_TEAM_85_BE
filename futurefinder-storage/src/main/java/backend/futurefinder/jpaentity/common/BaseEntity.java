@@ -22,7 +22,6 @@ public abstract class BaseEntity {
     private LocalDateTime updatedAt;
 
     public BaseEntity() {
-        this.createdAt = LocalDateTime.now();
     }
 
     public LocalDateTime getCreatedAt() {

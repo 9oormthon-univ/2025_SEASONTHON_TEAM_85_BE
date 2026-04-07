@@ -27,7 +27,7 @@ public final class UserRequest {
         public String toAccountId() { return accountId; }
     }
 
-
-
+    public static record UpdateProfile(String userName, String email, String phoneNumber, String birth) {
+    }
 
 }

@@ -1,6 +1,6 @@
 dependencies {
-    testImplementation project(':futurefinder-domain')
-    compileOnly project(':futurefinder-domain')
+    implementation project(':futurefinder-domain')
+    implementation project(':futurefinder-common')
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly('com.mysql:mysql-connector-j')
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
