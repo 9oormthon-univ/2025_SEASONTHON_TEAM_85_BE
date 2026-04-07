@@ -33,7 +33,14 @@ import java.util.UUID;
 public class UserJpaEntity extends BaseEntity {
 
     @Id
-    private String userId = UUID.randomUUID().toString();
+    private String userId;
+
+    @PrePersist
+    private void generateId() {
+        if (this.userId == null) {
+            this.userId = UUID.randomUUID().toString();
+        }
+    }
 
     @Column(name = "user_name")
     private String userName;

@@ -2,6 +2,7 @@ package backend.futurefinder.config;
 
 import backend.futurefinder.util.security.JwtAuthenticationEntryPoint;
 import backend.futurefinder.util.security.JwtAuthenticationFilter;
+import backend.futurefinder.util.security.SecurityPaths;
 import backend.futurefinder.util.security.SilentAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +25,11 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final JwtAuthenticationEntryPoint entryPoint; // JwtAuthenticationEntryPoint
-    private final SilentAccessDeniedHandler silentAccessDeniedHandler; // SilentAccessDeniedHandler
+    private final JwtAuthenticationEntryPoint entryPoint;
+    private final SilentAccessDeniedHandler silentAccessDeniedHandler;
+
+    @org.springframework.beans.factory.annotation.Value("${cors.allowed-origins}")
+    private List<String> allowedOrigins;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,23 +38,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/create/account",
-                                "/api/auth/login",
-                                "/api/auth/logout",
-                                "/api/user/account-id",
-                                "/api/auth/find/password",
-                                "/api/auth/kakao",
-                                "/docs/**",
-                                "/health",
-
-                                // 🔓 Swagger / OpenAPI
-                                "/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/v3/api-docs",
-                                "/v3/api-docs/**",
-                                "/v3/api-docs.yaml"
-                        ).permitAll()
+                        .requestMatchers(SecurityPaths.PUBLIC_PATHS).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
@@ -68,11 +56,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowedOrigins(List.of(
-                "http://127.0.0.1:8080",
-                "http://t2.mobidic.shop",
-                "https://t2.mobidic.shop"   // HTTPS도 함께 허용 권장
-        ));
+        cfg.setAllowedOrigins(allowedOrigins);
         cfg.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
         cfg.setAllowedHeaders(List.of("*"));
         cfg.setExposedHeaders(List.of("Authorization","Location","Content-Disposition"));

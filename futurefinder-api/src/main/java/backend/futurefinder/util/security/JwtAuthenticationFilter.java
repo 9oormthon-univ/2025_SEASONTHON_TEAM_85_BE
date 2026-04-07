@@ -14,9 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 
 @Component
@@ -24,7 +23,6 @@ import java.util.Collections;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
-    private final RequestMappingHandlerMapping handlerMapping;
 
 
     @Override
@@ -56,27 +54,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        // ✅ CORS preflight 는 무조건 패스
         if (CorsUtils.isPreFlightRequest(request)) {
             return true;
         }
 
         String path = request.getRequestURI();
-        return path.startsWith("/api/auth/create/account") ||
-                path.startsWith("/api/user/account-id") ||
-                path.startsWith("/api/auth/find/password") ||
-                path.startsWith("/api/auth/login") ||
-                path.startsWith("/api/auth/logout") ||
-                path.startsWith("/api/auth/kakao") ||
-                path.startsWith("/docs") ||
-                path.startsWith("/health") ||
-
-                //
-                path.equals("/swagger-ui.html") ||
-                path.startsWith("/swagger-ui") ||
-                path.startsWith("/v3/api-docs");
-
-
+        return Arrays.stream(SecurityPaths.PUBLIC_PATHS)
+                .anyMatch(pattern -> {
+                    String prefix = pattern.replace("/**", "").replace("/*", "");
+                    return path.equals(prefix) || path.startsWith(prefix + "/") || path.equals(pattern);
+                });
     }
 
     private String resolveToken(HttpServletRequest request) {

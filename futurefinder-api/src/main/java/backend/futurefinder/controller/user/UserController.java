@@ -421,16 +421,12 @@ public class UserController {
             }
     )
     @PutMapping("/profile")
-    public ResponseEntity<HttpResponse<SuccessOnlyResponse>> UpdateUserProfile(
+    public ResponseEntity<HttpResponse<SuccessOnlyResponse>> updateUserProfile(
             @CurrentUser UserId userId,
-            @RequestParam String userName,
-            @RequestParam String email,
-            @RequestParam String phoneNumber,
-            @RequestParam String birth
+            @RequestBody UserRequest.UpdateProfile request
     ){
-        userService.changeUserProfile(userId, userName, email, phoneNumber, birth);
+        userService.changeUserProfile(userId, request.userName(), request.email(), request.phoneNumber(), request.birth());
         return ResponseHelper.successOnly();
-
     }
 
 

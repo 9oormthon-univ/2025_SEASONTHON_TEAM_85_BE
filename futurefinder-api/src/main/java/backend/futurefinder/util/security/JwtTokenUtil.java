@@ -97,7 +97,10 @@ public class JwtTokenUtil {
     }
 
     public String cleanedToken(String token) {
-        return token.replaceFirst("(?i)^Bearer\\s+", "").trim();
+        if (token == null) {
+            throw new AuthorizationException(ErrorCode.INVALID_TOKEN);
+        }
+        return token.startsWith("Bearer ") ? token.substring(7).trim() : token.trim();
     }
 
     public Pair<JwtToken, UserId> refresh(String token) {
